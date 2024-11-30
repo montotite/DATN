@@ -14,5 +14,5 @@ def generate_uuid():
     return str(uuid.uuid4())
 
 
-class Device(Base):
-    __tablename__ = 'device'
+# class Device(Base):
+#     __tablename__ = 'device'
