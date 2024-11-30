@@ -87,9 +87,6 @@ void callback(char *topic, byte *payload, unsigned int length)
 void setup()
 {
     Serial.begin(9600);
-
-    setupServo();
-
     WiFi.begin(ssid.c_str(), password.c_str());
     while (WiFi.status() != WL_CONNECTED)
     {
