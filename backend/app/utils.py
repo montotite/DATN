@@ -12,7 +12,7 @@ from sqlalchemy.dialects import postgresql as pg
 from sqlalchemy.sql import label
 import sqlalchemy as sa
 
-from model import *
+from models import *
 from helpers import channel
 
 
