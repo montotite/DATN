@@ -33,10 +33,10 @@ class Settings(BaseSettings):
 
 
 class Queue(str, Enum):
-    SAVE_ATTRIBUTE = 'save_attibute'
-    SAVE_TELEMETRY = 'save_telemetry'
-    ATTRIBUTE_REQ = 'attibute_req'
-    ATTRIBUTE_RES = 'attibute_res'
+    # SAVE_ATTRIBUTE = 'save_attibute'
+    # SAVE_TELEMETRY = 'save_telemetry'
+    # ATTRIBUTE_REQ = 'attibute_req'
+    # ATTRIBUTE_RES = 'attibute_res'
 
     @staticmethod
     def list():
