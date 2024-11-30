@@ -7,7 +7,7 @@ from fastapi.openapi.docs import (get_swagger_ui_html,)
 from routes import router
 from helpers import Base, engine, rabbitmq, channel
 
-app = FastAPI(title="Smart Locker",
+app = FastAPI(title="FastApi",
               version="0.0.1",
               docs_url=None,
               redoc_url=None)
