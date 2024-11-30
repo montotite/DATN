@@ -1,0 +1,85 @@
+services:
+    adminer:
+      image: adminer
+      restart: always
+      ports:
+          - 9090:8080
+    postgres:
+      image: timescale/timescaledb:2.3.1-pg12
+      volumes:
+          - ./docker/volumes/postgres:/var/lib/postgresql/data
+      ports:
+          - 5432:5432
+      restart: always
+      env_file:
+        - ./docker/environment/postgres.env
+    rabbitmq:
+      image: rabbitmq:3-management
+      environment:
+        RABBITMQ_DEFAULT_USER: admin
+        RABBITMQ_DEFAULT_PASS: admin
+      restart: always
+      volumes:
+        - "./docker/volumes/rabbitmq:/bitnami/rabbitmq"
+      ports:
+        - 15672:15672
+        - 5672:5672
+    mosquitto:
+      image: eclipse-mosquitto
+      restart: always
+      ports:
+        - 1883:1883
+        # - 8883:8883
+        # - 9001:9001
+      environment:
+        - MOSQUITTO_USERNAME=mosquitto
+        - MOSQUITTO_PASSWORD=mosquitto
+      volumes:
+        - mosquitto:/mosquitto
+    backend:
+      build:
+        context: ./backend/
+        dockerfile: ./Dockerfile
+      restart: always
+      ports:
+        - 8000:8000
+      env_file:
+        - ./docker/environment/backend.env
+    # transports:
+    #   build:
+    #     context: ./workers
+    #     dockerfile: ./Dockerfile
+    #   # depends_on:
+    #   #   - rabbitmq
+    #   #   - mosquitto
+    #   restart: always
+    #   env_file:
+    #     - ./docker/environment/worker.env
+    #   volumes:
+    #     - "./docker/volumes/workers:/logs"
+    #   command: "python3 mqtt.py"
+
+    # worker1:
+    #   build:
+    #     context: ./workers
+    #     dockerfile: ./Dockerfile
+    #   # depends_on:
+    #   #   - rabbitmq
+    #   #   - mosquitto
+    #   #   - postgres
+    #   deploy:
+    #     replicas: 1
+    #   restart: always
+    #   env_file:
+    #     - ./docker/environment/worker.env
+    #   volumes:
+    #     - "./docker/volumes/workers:/logs"
+    #   command: "python3 save_telemetry.py"
+
+volumes:
+  mosquitto:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./docker/volumes/mosquitto
+      o: bind
