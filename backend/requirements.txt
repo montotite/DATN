@@ -1,0 +1,24 @@
+# Usage: pip install -r requirements.txt
+
+# fastAPI
+fastapi==0.114.2
+uvicorn[standard]
+pydantic-settings==2.2.1
+pydantic==2.6.4
+# file
+# DB
+SQLAlchemy==2.0.21
+psycopg2-binary==2.9.7
+alembic==1.12.0
+# auth
+python-jose==3.3.0
+requests==2.31.0
+
+passlib==1.7.4
+joblib==1.4.2
+
+pandas==2.2.2
+openpyxl==3.1.5
+pika==1.3.2
+redis==5.1.1
+redis-om==0.3.2
