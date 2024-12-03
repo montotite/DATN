@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from utils import *
 from schemas import *
 from helpers import get_db, Queue, get_channels
+from datetime import datetime, timedelta
 
 
 router = APIRouter()
@@ -21,24 +22,28 @@ def get_device_list(offset_limit=Depends(get_offset_limit), db=Depends(get_db)):
     return get_pages_records(data, offset_limit)
 
 
-@ router.post(path='/device', tags=[""], response_model=DeviceInfo)
-def create_device(form_data: DeviceInfo,
-                  db=Depends(get_db)):
-
-    device_id = ""
-    return get_device_info(device_id, db)
-
-
-@ router.get(path='/device/info', tags=[""], response_model=DeviceInfo)
-def get_device_info(id: UUID, db=Depends(get_db)):
-    return 
-
-
 
 @ router.delete(path='/device', tags=[""])
 def delete_device(id: UUID, db=Depends(get_db)):
 
     return "OK"
+
+def calculate_cost(self):
+    return calculate_cost(self.usage_kwh)
+
+def get_energy_data(start_date=None, end_date=None, db=None):
+    def timestamp_to_date(ts):
+        return datetime.datetime.fromtimestamp(ts / 1000).date()
+
+    if start_date is None and end_date is None:
+        return sum(entry["energy"] for entry in energy_data)
+    
+    filtered_data = [
+        entry for entry in energy_data 
+        if start_date <= timestamp_to_date(entry["ts"]) <= end_date
+    ]
+    return sum(entry["energy"] for entry in filtered_data)
+
 
 
 @router.get(path='/device/energy/today', tags=["Energy"],)
@@ -46,7 +51,7 @@ def get_today_energy_cost(db=Depends(get_db)):
     today = datetime.now().date()
     energy_consumed = get_energy_data(today, today, db)
     cost = calculate_cost(energy_consumed)
-    return {"energy_consumed": energy_consumed, "cost": cost}
+    return {"energy_consumed": energy_consumed, "cost": cost,}
 
 
 @router.get(path='/device/energy/month', tags=["Energy"],)
@@ -69,7 +74,7 @@ def get_year_energy_cost(db=Depends(get_db)):
 
 @router.get(path='/device/energy/total', tags=["Energy"],)
 def get_total_energy_cost(db=Depends(get_db)):
-    energy_consumed = get_energy_data(None, None, db)  # None -> lấy toàn bộ dữ liệu
+    energy_consumed = get_energy_data(None, None, db)  
     cost = calculate_cost(energy_consumed)
     return {"energy_consumed": energy_consumed, "cost": cost}
 
@@ -87,15 +92,30 @@ energy_data = [
     {"ts": 1733146651000, "energy": 200},
 ]
 
+class BillRequest(BaseModel):
+    ts: int  
+    usage_kwh: float
 
+def convert_epoch_to_date(ts: int):
+    date = datetime.fromtimestamp(ts / 1000)
+    return date.day, date.month, date.year, date.strftime("%d/%m/%Y")
 
-# Hàm lấy dữ liệu cho từng cột và chuyển đổi ngày thành Epoch
-def get_energy_column_with_epoch(data, column_index):
-    entry = data[column_index]
-    epoch_time = convert_to_epoch(entry["day"])
-    return {"epoch_time": epoch_time, "energy": entry["energy"]}
-
-
+@router.post(path='/device/bill', tags=["Bill"])
+def get_electricity_bill(bill_request: BillRequest):
+    day, month, year, formatted_date = convert_epoch_to_date(bill_request.ts)
+    bill = ElectricityBill(
+        day=day,
+        month=month,
+        year=year,
+        usage_kwh=bill_request.usage_kwh
+    )
+    total_cost = bill.calculate_bill()
+    
+    return {
+        "date": formatted_date,
+        "usage_kwh": bill.usage_kwh,
+        "total_cost": f"{total_cost:,} VNĐ"
+    }
 
 class ElectricityBill:
     def __init__(self, day, month, year, usage_kwh):
@@ -138,5 +158,31 @@ class ElectricityBill:
 
 
 # Ví dụ sử dụng
-bill = ElectricityBill(day=29, month=11, year=2024, usage_kwh=350)
+bill = ElectricityBill(day=29, month=11, year=2024, usage_kwh=250)
 bill.display_bill()
+
+def calculate_energy_cost(daily_consumption_kwh, price_per_kwh):
+    today = datetime.today()
+    days_in_month = (today.replace(month=today.month % 12 + 1, day=1) - timedelta(days=1)).day
+    days_in_year = 365
+
+    # Tính tiêu thụ và chi phí
+    daily_cost = daily_consumption_kwh * price_per_kwh
+    monthly_consumption = daily_consumption_kwh * days_in_month
+    yearly_consumption = daily_consumption_kwh * days_in_year
+
+    monthly_cost = monthly_consumption * price_per_kwh
+    yearly_cost = yearly_consumption * price_per_kwh
+
+    total_energy = yearly_consumption
+
+    print(f"Daily Cost: {daily_cost:.3f} VND")
+    print(f"Monthly Consumption: {monthly_consumption:.3f} kWh, Cost: {monthly_cost:.3f} VND")
+    print(f"Yearly Consumption: {yearly_consumption:.3f} kWh, Cost: {yearly_cost:.3f} VND")
+    print(f"Total Energy Consumption (Yearly): {total_energy:.3f} kWh")
+
+# Ví dụ sử dụng:
+daily_consumption_kwh = 5  
+price_per_kwh = 3000  
+
+calculate_energy_cost(5, 3000)
