@@ -91,4 +91,43 @@ function load_device(data) {
         api_device_list(page_size, page);
     }
 }
+const cons_today = document.getElementById("cons_today")
+const cost_today = document.getElementById("cost_today")
+
+
+const cons_month = document.getElementById("cons_today")
+const cost_month = document.getElementById("cost_today")
+
+
+const cons_year = document.getElementById("cons_today")
+const cost_year = document.getElementById("cost_today")
+
+const cons_total = document.getElementById("cons_today")
+const cost_total = document.getElementById("cost_today")
+
+function load_summary(data) {
+    console.log(data)
+    cons_today.innerText = `${data.today.cons} kwh`
+    cost_today.innerText = `${data.today.cost} VND`
+
+    cons_today.innerText = `${data.today.cons} kwh`
+    cost_today.innerText = `${data.today.cost} VND`
+
+    cons_today.innerText = `${data.today.cons} kwh`
+    cost_today.innerText = `${data.today.cost} VND`
+
+    cons_today.innerText = `${data.today.cons} kwh`
+    cost_today.innerText = `${data.today.cost} VND`
+
+
+}
+function api_summary() {
+    fetch(`${host}/api/dashboard/summary`)
+        .then(response => response.json())
+        .then(data => load_summary(data))
+        .catch(error => console.error('Error:', error));
+}
 api_device_list(page_size, page);
+api_summary();
+
+setInterval(api_summary, 5000);

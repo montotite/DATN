@@ -38,10 +38,10 @@ router = APIRouter()
 def get_asset_list(db=Depends(get_db)):
 
     return {
-        "today": {"cons": 100, "cost": 100},
-        "month": {"cons": 100, "cost": 100},
-        "year": {"cons": 100, "cost": 100},
-        "total": {"cons": 100, "cost": 100},
+        "today": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
+        "month": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
+        "year": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
+        "total": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
     }
 
 
