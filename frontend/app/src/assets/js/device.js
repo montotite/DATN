@@ -1,7 +1,8 @@
+var page = 0
+var page_size = 5
 
-
-function api_device_list() {
-    fetch('http://103.176.251.60:32770/api/device?page_size=10&page=0')
+function api_device_list(page_size, page) {
+    fetch(`http://103.176.251.60:32770/api/device?page_size=${page_size}&page=${page}`)
         .then(response => response.json())
         .then(data => load_device(data))
         .catch(error => console.error('Error:', error));
@@ -65,8 +66,14 @@ function load_device(data) {
         </div>    
         `
         device_ls.appendChild(item)
-    });
+    }
+    );
+    if (data.has_next) {
+        page++
+        api_device_list(page_size, page);
+    } else {
+
+    }
+    console.log();
 }
-
-
-api_device_list();
+api_device_list(page_size, page);
