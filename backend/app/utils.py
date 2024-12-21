@@ -379,9 +379,10 @@ class Crud:
             self.db.rollback()
             return False
 
-    def create_device(self, name: str, credential: str):
+    def create_device(self, name: str, credential: str, additional_info:str):
         try:
             data = Device(name=str(name),
+                          additional_info = additional_info
                           credential=str(credential))
             self.db.add(data)
             self.db.commit()

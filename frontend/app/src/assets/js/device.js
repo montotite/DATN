@@ -1,8 +1,10 @@
+
+var host = 'http://103.176.251.60:32770'
 var page = 0
 var page_size = 5
 
 function api_device_list(page_size, page) {
-    fetch(`http://103.176.251.60:32770/api/device?page_size=${page_size}&page=${page}`)
+    fetch(`${host}/api/device?page_size=${page_size}&page=${page}`)
         .then(response => response.json())
         .then(data => load_device(data))
         .catch(error => console.error('Error:', error));
@@ -41,7 +43,7 @@ function add_device_item(element) {
                                     card's content.
             </p>
             <p class="card-text">Thời gian tạo: ${time}</p>
-            <a href="#" class="card-link">Chi tiết</a>
+            <a href="${element.id}" class="card-link">Chi tiết</a>
         </div>
     </div>    
     `
@@ -57,20 +59,23 @@ async function create_device(event) {
     const description = document.getElementById("description");
     console.log(name.value)
 
-    const rawResponse = await fetch('http://103.176.251.60:32770/api/device', {
+    const rawResponse = await fetch(`${host}/api/device`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            "name": name.value
+            "name": name.value,
+            "additional_info": JSON.stringify({ "description": description.value })
         })
     });
     const content = await rawResponse.json();
-    console.log(content);
-    const item = add_device_item(content)
-    device_ls.appendChild(item)
+    const status = await rawResponse.status;
+    if (status == 200) {
+        const item = add_device_item(content)
+        device_ls.appendChild(item)
+    }
 
 }
 function load_device(data) {
@@ -82,9 +87,6 @@ function load_device(data) {
     if (data.has_next) {
         page++
         api_device_list(page_size, page);
-    } else {
-
     }
-    console.log();
 }
 api_device_list(page_size, page);
