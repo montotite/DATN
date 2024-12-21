@@ -33,10 +33,10 @@ class Settings(BaseSettings):
 
 
 class Queue(str, Enum):
-    SAVE_ATTRIBUTE = 'save_attibute'
-    SAVE_TELEMETRY = 'save_telemetry'
-    ATTRIBUTE_REQ = 'attibute_req'
-    ATTRIBUTE_RES = 'attibute_res'
+    # SAVE_ATTRIBUTE = 'save_attibute'
+    # SAVE_TELEMETRY = 'save_telemetry'
+    # ATTRIBUTE_REQ = 'attibute_req'
+    # ATTRIBUTE_RES = 'attibute_res'
 
     @staticmethod
     def list():
@@ -72,19 +72,14 @@ def gen_rb_con():
     rb_con = pika.BlockingConnection(connect)
     return rb_con
 
-# rb_con = gen_rb_con()
 
 
 def get_channels():
-    # try:
     rb_con = gen_rb_con()
     channel = rb_con.channel()
     for item in Queue.list():
         channel.queue_declare(queue=item)
     return channel
-    # yield channel
-    # finally:
-    #     channel.close()
 
 
 channel = get_channels()
