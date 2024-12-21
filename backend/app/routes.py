@@ -85,9 +85,10 @@ def get_device_list(offset_limit=Depends(get_offset_limit), db=Depends(get_db)):
 
 @router.post(path="/device", tags=[tags[1]], response_model=DeviceInfo)
 def create_device(form_data: DeviceInfo, db=Depends(get_db)):
-
     credential = generate_credentials()
-    device_info = Crud(db).create_device(form_data.name, credential)
+    device_info = Crud(db).create_device(
+        form_data.name, credential, form_data.additional_info
+    )
     if device_info == False:
         raise HTTPException(400)
     device_id = device_info["id"]
