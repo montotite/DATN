@@ -8,6 +8,46 @@ function api_device_list(page_size, page) {
         .catch(error => console.error('Error:', error));
 }
 
+
+function addZero(x, n) {
+    while (x.toString().length < n) {
+        x = "0" + x;
+    }
+    return x;
+}
+
+
+function add_device_item(element) {
+    var date = new Date(element.created_time);
+    var day = addZero(date.getDay(), 2);
+    var month = addZero(date.getMonth(), 2);
+    var year = addZero(date.getFullYear(), 4);
+
+    var h = addZero(date.getHours(), 2);
+    var m = addZero(date.getMinutes(), 2);
+    var s = addZero(date.getSeconds(), 2);
+    var ms = addZero(date.getMilliseconds(), 3);
+    var time = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s + ":" + ms;
+    const item = document.createElement('div');
+    item.className = "col-lg-3"
+    item.innerHTML = `
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">${element.name}</h5>
+            <p class="card-text">
+            Some quick example text to build on the card title and make up
+                                    the bulk of
+                                    the
+                                    card's content.
+            </p>
+            <p class="card-text">Thời gian tạo: ${time}</p>
+            <a href="#" class="card-link">Chi tiết</a>
+        </div>
+    </div>    
+    `
+    return item
+}
+
 const form_create_device = document.getElementById("form_create_device");
 const device_ls = document.getElementById("device_ls");
 
@@ -29,42 +69,13 @@ async function create_device(event) {
     });
     const content = await rawResponse.json();
     console.log(content);
-    const item = document.createElement('div');
-    item.className = "col-lg-3"
-    item.innerHTML = `
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">${content.name}</h5>
-                <p class="card-text">
-                Some quick example text to build on the card title and make up
-                                        the bulk of
-                                        the
-                                        card's content.
-                </p>
-                <a href="#" class="card-link">Chi tiết</a>
-            </div>
-        </div>    
-        `
+    const item = add_device_item(content)
     device_ls.appendChild(item)
+
 }
 function load_device(data) {
     data.data.forEach(element => {
-        const item = document.createElement('div');
-        item.className = "col-lg-3"
-        item.innerHTML = `
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">${element.name}</h5>
-                <p class="card-text">
-                Some quick example text to build on the card title and make up
-                                        the bulk of
-                                        the
-                                        card's content.
-                </p>
-                <a href="#" class="card-link">Chi tiết</a>
-            </div>
-        </div>    
-        `
+        const item = add_device_item(element)
         device_ls.appendChild(item)
     }
     );
