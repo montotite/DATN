@@ -34,6 +34,17 @@ tags = [
 router = APIRouter()
 
 
+@router.get(path="/dashboard/summary", tags=[tags[5]])
+def get_asset_list(db=Depends(get_db)):
+
+    return {
+        "today": {"cons": 100, "cost": 100},
+        "month": {"cons": 100, "cost": 100},
+        "year": {"cons": 100, "cost": 100},
+        "total": {"cons": 100, "cost": 100},
+    }
+
+
 @router.get(path="/asset", tags=[tags[3]], response_model=AssetList)
 def get_asset_list(offset_limit=Depends(get_offset_limit), db=Depends(get_db)):
     offset, limit = offset_limit

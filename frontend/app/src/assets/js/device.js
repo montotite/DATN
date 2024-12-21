@@ -30,18 +30,20 @@ function add_device_item(element) {
     var s = addZero(date.getSeconds(), 2);
     var ms = addZero(date.getMilliseconds(), 3);
     var time = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s + ":" + ms;
+
+    var additional_info = {};
+    if (element.additional_info) {
+        var additional_info = JSON.parse(element.additional_info);
+    }
+
+    var description = additional_info.description || ""
     const item = document.createElement('div');
     item.className = "col-lg-3"
     item.innerHTML = `
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">${element.name}</h5>
-            <p class="card-text">
-            Some quick example text to build on the card title and make up
-                                    the bulk of
-                                    the
-                                    card's content.
-            </p>
+            <p class="card-text">${description}</p>
             <p class="card-text">Thời gian tạo: ${time}</p>
             <a href="${element.id}" class="card-link">Chi tiết</a>
         </div>
