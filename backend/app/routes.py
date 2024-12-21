@@ -6,6 +6,22 @@ from utils import *
 from schemas import *
 from helpers import get_db, Queue, get_channels
 
+# Mock data
+energy_data = [
+    {"ts": 1732801051000, "energy": 100},
+    {"ts": 1732887451000, "energy": 120},
+    {"ts": 1732973851000, "energy": 150},
+    {"ts": 1733060251000, "energy": 180},
+    {"ts": 1733146651000, "energy": 200},
+    {"ts": 1733233051000, "energy": 250},
+    {"ts": 1733319451000, "energy": 300},
+    {"ts": 1733405851000, "energy": 350},
+    {"ts": 1733492251000, "energy": 400},
+    {"ts": 1733578651000, "energy": 450},
+    {"ts": 1733665051000, "energy": 500},
+    {"ts": 1733751451000, "energy": 550},
+    {"ts": 1733837851000, "energy": 600},
+]
 
 tags = [
     "RPC Controller",
