@@ -27,7 +27,8 @@ def read_item(request: Request):
 def read_item(request: Request, id: UUID, db=Depends(get_db)):
     db = Crud(db)
     info = db.get_device_info(id)
-    print(info)
+    if info["additional_info"] != None:
+        info["additional_info"] = json.loads(info["additional_info"])
     return templates.TemplateResponse(request, name="device-detail.html", context=info)
 
 

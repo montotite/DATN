@@ -76,8 +76,9 @@ async function create_device(event) {
     const content = await rawResponse.json();
     const status = await rawResponse.status;
     if (status == 200) {
-        const item = add_device_item(content)
-        device_ls.appendChild(item)
+        // const item = add_device_item(content)
+        // device_ls.appendChild(item)
+        location.href = `/device/${content.id}`;
     }
 
 }
