@@ -65,7 +65,7 @@ void updateAttribute()
     doc["power"] = pzem.power();
     doc["energy"] = pzem.energy() * 1000;
     doc["frequency"] = pzem.frequency();
-    doc["pf"] pf = pzem.pf();
+    doc["pf"] = pzem.pf();
 
     String msg = "";
     serializeJson(doc, msg);
@@ -81,7 +81,8 @@ void updateTelemetry()
     doc["power"] = pzem.power();
     doc["energy"] = pzem.energy() * 1000;
     doc["frequency"] = pzem.frequency();
-    doc["pf"] pf = pzem.pf();
+    doc["pf"] = pzem.pf();
+    
     String msg = "";
     serializeJson(doc, msg);
     mqtt.updateTelemetry(msg);
