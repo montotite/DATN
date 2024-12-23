@@ -6,6 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import (
     get_swagger_ui_html,
 )
+
+from views.routes import router as view
 from routes import router
 from helpers import Base, engine, rabbitmq, channel
 
@@ -22,7 +24,9 @@ app.add_middleware(
 )
 
 
+app.include_router(view, prefix="")
 app.include_router(router, prefix="/api")
+app.mount("/assets", StaticFiles(directory="static/assets"), name="static")
 
 
 @app.middleware("http")
