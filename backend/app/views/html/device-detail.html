@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MaterailM Free Bootstrap Admin Template by WrapPixel</title>
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="../assets/css/styles.min.css" />
+</head>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        {% include 'layouts/left-sidebar.html' %}
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            {% include 'layouts/header.html' %}
+            <!--  Header End -->
+            <div class="body-wrapper-inner">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-span-12 d-flex align-items-stretch">
+                            <div class="card w-100 overflow-hidden">
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card-body">
+                                            <h5 class="card-title fw-semibold mb-4">Chi tiết thiết bị</h5>
+                                            <form>
+                                                <div class="mb-3">
+                                                    <label class="form-label">id</label>
+                                                    <input type="text" class="form-control" value="{{ id }}" disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Tên thiết bị</label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1"
+                                                        value="{{ name }}" disabled>
+
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="exampleInputPassword1" class="form-label">Ngày
+                                                        tạo</label>
+                                                    <input type="text" class="form-control" id="exampleInputPassword1"
+                                                        value="{{ created_time }}" disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Mã kết nối thiết bị</label>
+                                                    <input type="text" class="form-control" value="{{ credential }}"
+                                                        disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Mô tả</label>
+                                                    <input type="text" class="form-control" value="{{additional_info}}"
+                                                        disabled>
+                                                </div>
+                                                <button class="btn btn-danger" type="button">Chỉnh sửa</button>
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card-body">
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <h5 class="mb-0">Dữ liệu cảm biến</h5>
+                                                </div>
+                                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                                                    <!-- <li class="nav-item" role="presentation">
+                                                        <a class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                                                            href="#profile5" role="tab" aria-controls="profile"
+                                                            aria-selected="false" tabindex="-1">
+                                                            <span>Tab 2</span>
+                                                        </a>
+                                                    </li> -->
+                                                    <li class="nav-item dropdown" role="presentation">
+                                                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                                                            href="javascript:void(0)" role="button"
+                                                            aria-expanded="false">
+                                                            <span>Attributes</span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <a class="dropdown-item" id="dropdown1-tab"
+                                                                    href="#dropdown1" role="tab" data-bs-toggle="tab"
+                                                                    aria-controls="dropdown1" aria-selected="false"
+                                                                    tabindex="-1">Server</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item" id="dropdown2-tab"
+                                                                    href="#dropdown2" role="tab" data-bs-toggle="tab"
+                                                                    aria-controls="dropdown2" aria-selected="false"
+                                                                    tabindex="-1">Clinet</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="nav-item" role="presentation">
+                                                        <a class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                                            href="#home5" role="tab" aria-controls="home5"
+                                                            aria-expanded="true" aria-selected="true">
+                                                            <span>Telemetry</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <div class="tab-content tabcontent-border p-3" id="myTabContent">
+                                                    <div role="tabpanel" class="tab-pane fade active show" id="home5"
+                                                        aria-labelledby="home-tab">
+
+                                                        <div class="table-responsive">
+                                                            <table class="table">
+                                                                <thead class="bg-primary text-white">
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>First Name</th>
+                                                                        <th>Last Name</th>
+                                                                        <th>Username</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>1</td>
+                                                                        <td>Nigam</td>
+                                                                        <td>Eichmann</td>
+                                                                        <td>@Sonu</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>2</td>
+                                                                        <td>Deshmukh</td>
+                                                                        <td>Prohaska</td>
+                                                                        <td>@Genelia</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>3</td>
+                                                                        <td>Roshan</td>
+                                                                        <td>Rogahn</td>
+                                                                        <td>@Hritik</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="profile5" role="tabpanel"
+                                                        aria-labelledby="profile-tab">
+                                                        <p>
+                                                            Food truck fixie locavore, accusamus mcsweeney's marfa
+                                                            nulla single-origin coffee squid. Exercitation +1
+                                                            labore velit, blog sartorial PBR leggings next level
+                                                            wes anderson artisan four loko farm-to-table craft
+                                                            beer twee. Qui photo booth letterpress, commodo enim
+                                                            craft beer mlkshk aliquip jean shorts ullamco ad vinyl
+                                                            cillum PBR. Homo nostrud organic, assumenda labore
+                                                            aesthetic magna delectus mollit. Keytar helvetica VHS
+                                                            salvia yr, vero magna velit sapiente labore stumptown.
+                                                            Vegan fanny pack odio cillum wes anderson 8-bit,
+                                                            sustainable jean shorts beard ut DIY ethical culpa
+                                                            terry richardson biodiesel. Art party scenester
+                                                            stumptown, tumblr butcher vero sint qui sapiente
+                                                            accusamus tattooed echo park.
+                                                        </p>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="dropdown1" role="tabpanel"
+                                                        aria-labelledby="dropdown1-tab">
+                                                        <p>
+                                                            Etsy mixtape wayfarers, ethical wes anderson tofu
+                                                            before they sold out mcsweeney's organic lomo retro
+                                                            fanny pack lo-fi farm-to-table readymade. Messenger
+                                                            bag gentrify pitchfork tattooed craft beer, iphone
+                                                            skateboard locavore carles etsy salvia banksy hoodie
+                                                            helvetica. DIY synth PBR banksy irony. Leggings
+                                                            gentrify squid 8-bit cred pitchfork. Williamsburg banh
+                                                            mi whatever gluten-free, carles pitchfork biodiesel
+                                                            fixie etsy retro mlkshk vice blog. Scenester cred you
+                                                            probably haven't heard of them, vinyl craft beer blog
+                                                            stumptown. Pitchfork sustainable tofu synth chambray
+                                                            yr.
+                                                        </p>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="dropdown2" role="tabpanel"
+                                                        aria-labelledby="dropdown2-tab">
+                                                        <p>
+                                                            Trust fund seitan letterpress, keytar raw denim
+                                                            keffiyeh etsy art party before they sold out master
+                                                            cleanse gluten-free squid scenester freegan cosby
+                                                            sweater. Fanny pack portland seitan DIY, art party
+                                                            locavore wolf cliche high life echo park Austin. Cred
+                                                            vinyl keffiyeh DIY salvia PBR, banh mi before they
+                                                            sold out farm-to-table VHS viral locavore cosby
+                                                            sweater. Lomo wolf viral, mustache readymade
+                                                            thundercats keffiyeh craft beer marfa ethical. Wolf
+                                                            salvia freegan, sartorial keffiyeh echo park vegan.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/sidebarmenu.js"></script>
+    <script src="../assets/js/app.min.js"></script>
+    <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
+    <!-- <script src="../assets/js/device.js"></script> -->
+    <!-- solar icons -->
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+</body>
+
+</html>

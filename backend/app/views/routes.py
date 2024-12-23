@@ -4,6 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 
+from utils import *
+from helpers import get_db
+
+
 router = APIRouter()
 
 templates = Jinja2Templates(directory="views/html")
@@ -20,9 +24,11 @@ def read_item(request: Request):
 
 
 @router.get("/device/{id}", response_class=HTMLResponse)
-def read_item(request: Request, id: UUID):
-    print(id)
-    return templates.TemplateResponse(request, name="device.html")
+def read_item(request: Request, id: UUID, db=Depends(get_db)):
+    db = Crud(db)
+    info = db.get_device_info(id)
+    print(info)
+    return templates.TemplateResponse(request, name="device-detail.html", context=info)
 
 
 @router.get("/warnings", response_class=HTMLResponse)
