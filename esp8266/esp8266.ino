@@ -1,3 +1,8 @@
+#define PZEM_RX_PIN 13
+#define PZEM_TX_PIN 12
+
+#include <PZEM004Tv30.h>
+#include <SoftwareSerial.h>
 #include "ESP8266WiFi.h"
 #include <ArduinoJson.h>
 #include "WiFiUdp.h"
@@ -7,13 +12,12 @@
 #include "mqttClinet.h"
 #include "config.h"
 
-
-
+SoftwareSerial pzemSWSerial(PZEM_RX_PIN, PZEM_TX_PIN);
+PZEM004Tv30 pzem(pzemSWSerial);
 WiFiUDP ntpUDP;
 WiFiClient wifiClient;
 MqttClient mqtt(wifiClient);
 NTPClient timeClient(ntpUDP);
-
 
 void onShareAttribute(String msg)
 {
@@ -53,9 +57,16 @@ void updateAttribute()
     doc["RSSI_WIFI"] = WiFi.RSSI();
     doc["MAC_ADDRESS"] = WiFi.BSSIDstr();
     doc["IP_ADDRESS"] = WiFi.localIP();
-    doc["LOCAL_TIME"] = timeClient.getFormattedTime();
+    // doc["LOCAL_TIME"] = timeClient.getFormattedTime();
     // doc["BATTERY_VOLTAGE"] = 12;
     // doc["BATTERY PERCENTAGE"] = 90;
+    doc["voltage"] = pzem.voltage();
+    doc["current"] = pzem.current();
+    doc["power"] = pzem.power();
+    doc["energy"] = pzem.energy() * 1000;
+    doc["frequency"] = pzem.frequency();
+    doc["pf"] pf = pzem.pf();
+
     String msg = "";
     serializeJson(doc, msg);
     mqtt.updateAttribute(msg);
@@ -65,6 +76,12 @@ void updateTelemetry()
 {
     DynamicJsonDocument doc(1024);
     doc["RSSI_WIFI"] = WiFi.RSSI();
+    doc["voltage"] = pzem.voltage();
+    doc["current"] = pzem.current();
+    doc["power"] = pzem.power();
+    doc["energy"] = pzem.energy() * 1000;
+    doc["frequency"] = pzem.frequency();
+    doc["pf"] pf = pzem.pf();
     String msg = "";
     serializeJson(doc, msg);
     mqtt.updateTelemetry(msg);

@@ -31,7 +31,7 @@ private:
     void onMsg(char *, uint8_t *, unsigned int);
 
     const char *mqtt_server = "103.176.251.60";
-    const uint16_t mqtt_server_port = 32792;
+    const uint16_t mqtt_server_port = 1883;
 
     String TELEMETRY = "";
     String ATTRIBUTE = "";
