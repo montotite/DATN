@@ -46,7 +46,7 @@
                                                 <div class="mb-3">
                                                     <label for="exampleInputPassword1" class="form-label">Ngày
                                                         tạo</label>
-                                                    <input type="text" class="form-control" id="exampleInputPassword1"
+                                                    <input type="text" class="form-control" id="entity_createtime"
                                                         value="{{ created_time }}" disabled>
                                                 </div>
                                                 <div class="mb-3">
@@ -244,10 +244,36 @@
                 location.href = "/devices";
             }
         }
+        function addZero(x, n) {
+            while (x.toString().length < n) {
+                x = "0" + x;
+            }
+            return x;
+        }
+        function convenTime(created_time) {
 
+            var date = new Date(parseInt(created_time));
+            var day = addZero(date.getDay(), 2);
+            var month = addZero(date.getMonth(), 2);
+            var year = addZero(date.getFullYear(), 4);
+
+            var h = addZero(date.getHours(), 2);
+            var m = addZero(date.getMinutes(), 2);
+            var s = addZero(date.getSeconds(), 2);
+            var ms = addZero(date.getMilliseconds(), 3);
+            var time = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s + ":" + ms;
+            return time
+        }
+        const entity_createtime = document.getElementById("entity_createtime")
         const btn_delete = document.getElementById("btn_delete")
         const entity_id = document.getElementById("entity_id")
+
+
         btn_delete.addEventListener("click", event_delete)
+        const createtime = entity_createtime.value
+        entity_createtime.value = convenTime(createtime)
+
+
 
 
 
