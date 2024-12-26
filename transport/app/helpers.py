@@ -1,3 +1,5 @@
+
+import logging
 from enum import Enum
 import os
 import urllib.parse
@@ -8,12 +10,10 @@ from sqlalchemy import create_engine
 from pydantic_settings import BaseSettings
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
-
 load_dotenv()
 
 
 class Settings(BaseSettings):
-
     DB_HOST: str = os.getenv("DB_HOST")
     DB_PORT: Optional[int] = os.getenv("DB_PORT") or 5432
     DB_USER: str = os.getenv("DB_USER")
@@ -28,8 +28,26 @@ class Settings(BaseSettings):
     RB_USER: str = os.getenv("RB_USER") or ""
     RB_PASS: str = os.getenv("RB_PASS") or ""
 
+    MQTT_HOST: Optional[str] = os.getenv("MQTT_HOST")
+    MQTT_PORT: Optional[int] = os.getenv("MQTT_PORT") or 1883
+    MQTT_USER: Optional[str] = os.getenv("MQTT_USER")
+    MQTT_PASS: Optional[str] = os.getenv("MQTT_PASS")
+
     class Config:
         env_file = ".env"
+
+
+class MqttTopic(str, Enum):
+    TELEMETRY = '/devices/me/telemetry'
+    ATTRIBUTE = '/devices/me/attributes'
+    ATTRIBUTE_REQ = '/devices/me/attributes/request'
+    ATTRIBUTE_RES = '/devices/me/attributes/response'
+    RPC_REQ = '/devices/me/rpc/response'
+    RPC_RES = '/devices/me/rpc/response'
+
+    @staticmethod
+    def list():
+        return list(map(lambda c: c.value, MqttTopic))
 
 
 class Queue(str, Enum):
@@ -72,24 +90,13 @@ def gen_rb_con():
     rb_con = pika.BlockingConnection(connect)
     return rb_con
 
-# rb_con = gen_rb_con()
-
 
 def get_channels():
-    # try:
     rb_con = gen_rb_con()
     channel = rb_con.channel()
     for item in Queue.list():
         channel.queue_declare(queue=item)
     return channel
-    # yield channel
-    # finally:
-    #     channel.close()
 
 
 channel = get_channels()
-
-
-def rabbitmq():
-    channel.basic_qos(prefetch_count=1)
-    channel.start_consuming()

@@ -1,63 +1,86 @@
-
-import json
-import math
 import time
 import uuid
-import random
-import pika
-import string
-from sqlalchemy.orm import Session
-from fastapi import HTTPException,  status
-from sqlalchemy.dialects import postgresql as pg
-from sqlalchemy.sql import label
-import sqlalchemy as sa
+from sqlalchemy import desc, or_, func, text
 
-from model import *
-from helpers import channel
+from helpers import *
 
 
 def timestamp():
-    return round(time.time()*1000)
+    return round(time.time() * 1000)
 
 
 def generate_uuid():
     return str(uuid.uuid4())
 
 
-def generate_credentials():
-    res = ''.join(random.choices(string.ascii_letters,
-                                 k=20))  # initializing size of string
-    return res
-
-
 def basic_publish(routing_key, message):
-    channel.basic_publish(exchange='',
-                          routing_key=routing_key,
-                          body=str(message),
-                          properties=pika.BasicProperties(delivery_mode=pika.DeliveryMode.Persistent))
-    
+    # message = ' '.join(sys.argv[1:]) or "Hello World!"
 
-class Crud:
-    def __init__(self, db) -> None:
-        self.db: Session = db
+    channel.basic_publish(
+        exchange="",
+        routing_key=routing_key,
+        body=str(message),
+        properties=pika.BasicProperties(delivery_mode=pika.DeliveryMode.Persistent),
+    )
 
-    def delete_device(self, id: str):
-        try:
-            
-            return True
-        except:
-            self.db.rollback()
+
+def get_device_info_by_credential(token: str):
+    with SessionLocal() as db:
+        stmt = text(
+            """
+                SELECT *
+                FROM "device"
+                WHERE "credential" = :credential
+                """
+        )
+        device_info = db.execute(stmt, params={"credential": str(token)}).fetchone()
+        if device_info == None:
             return False
+        return {
+            "id": str(device_info.id),
+            "created_time": device_info.created_time,
+            "additional_info": device_info.additional_info,
+            "type": device_info.type,
+            "name": device_info.name,
+            "credential": device_info.credential,
+        }
 
-    def create_device(self, name: str, credential: str):
-        try:
-            return
-        except:
-            self.db.rollback()
-            return False
 
-    def get_device_info(self, id: str):
-        return
+def insert_or_update_attribute(
+    entity_id, attribute_type, attribute_key, value, last_update_ts
+):
+    with SessionLocal() as db:
+        stmt = text(
+            """ 
+            INSERT INTO attribute_kv (entity_id, attribute_type, attribute_key, value, last_update_ts) 
+            VALUES (:entity_id, :attribute_type, :attribute_key, :value, :last_update_ts)
+            ON CONFLICT (entity_id, attribute_type, attribute_key) DO UPDATE 
+            SET value = excluded.value, 
+                last_update_ts = excluded.last_update_ts;
+            """
+        )
+        db.execute(
+            stmt,
+            {
+                "entity_id": entity_id,
+                "attribute_type": attribute_type,
+                "attribute_key": attribute_key,
+                "value": value,
+                "last_update_ts": last_update_ts,
+            },
+        )
+        db.commit()
 
-    def get_device_list(self, offset=None, limit=None):
-        return
+
+def insert_or_update_telemetry(entity_id, key, value, ts):
+    with SessionLocal() as db:
+        stmt = text(
+            """ 
+            INSERT INTO ts_kv (entity_id, key, value, ts) 
+            VALUES (:entity_id, :key, :value, :ts)
+            ON CONFLICT (entity_id, key, ts) DO UPDATE 
+            SET value = excluded.value;
+            """
+        )
+        db.execute(stmt, {"entity_id": entity_id, "key": key, "value": value, "ts": ts})
+        db.commit()
