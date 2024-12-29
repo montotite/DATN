@@ -479,6 +479,20 @@ class Crud:
             self.db.rollback()
             return False
 
+    def get_device_info_by_credential(self, credential: str):
+        data = self.db.query(Device)
+        data = data.filter(Device.credential == str(credential))
+        data = data.first()
+        if data == None:
+            return False
+        return {
+            "id": str(data.id),
+            "name": data.name,
+            "type": data.type,
+            "created_time": data.created_time,
+            "credential": data.credential,
+        }
+
     def get_device_info(self, id: str):
         data = self.db.query(Device)
         data = data.filter(Device.id == str(id))

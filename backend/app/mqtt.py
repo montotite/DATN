@@ -1,12 +1,28 @@
 import json
 import sys
+import os
 
 # import threading
 from threading import Thread
 import paho.mqtt as mqttc
 import paho.mqtt.client as paho
 from utils import *
-from schema import AttributesScope
+from schemas import AttributesScope
+from helpers import (
+    MqttTopic,
+    logging,
+    settings,
+    get_channels,
+    channel,
+    Queue,
+    SessionLocal,
+)
+
+
+def get_db():
+    with SessionLocal() as db:
+        db_api = Crud(db)
+        return db_api
 
 
 def get_topic(msg):
@@ -16,37 +32,40 @@ def get_topic(msg):
 
 
 def save_telemetry(payload, device_info, ts):
-    for item in payload.keys():
-        msg = {
-            "payload": {"key": item, "value": payload[item]},
-            "ts": ts,
-            "device_info": device_info,
-        }
-        msg = json.dumps(msg)
-        basic_publish(Queue.SAVE_TELEMETRY, msg)
+    pass
+    # for item in payload.keys():
+    #     msg = {
+    #         "payload": {"key": item, "value": payload[item]},
+    #         "ts": ts,
+    #         "device_info": device_info,
+    #     }
+    #     msg = json.dumps(msg)
+    # basic_publish(Queue.SAVE_TELEMETRY, msg)
 
 
 def save_attibute(payload, device_info, ts):
-    for item in payload.keys():
-        msg = {
-            "payload": {"key": item, "value": payload[item]},
-            "scope": AttributesScope.CLIENT_SCOPE.value,
-            "ts": ts,
-            "device_info": device_info,
-        }
-        msg = json.dumps(msg)
-        basic_publish(Queue.SAVE_ATTRIBUTE, msg)
+    pass
+
+    # for item in payload.keys():
+    #     msg = {
+    #         "payload": {"key": item, "value": payload[item]},
+    #         "scope": AttributesScope.CLIENT_SCOPE.value,
+    #         "ts": ts,
+    #         "device_info": device_info,
+    #     }
+    #     msg = json.dumps(msg)
+    # basic_publish(Queue.SAVE_ATTRIBUTE, msg)
 
 
 def attibute_req(msg, device_info, ts):
-    basic_publish(Queue.ATTRIBUTE_REQ, msg)
+    # basic_publish(Queue.ATTRIBUTE_REQ, msg)
     pass
 
 
 def attibute_res(msg, device_info, ts):
-
+    pass
     msg = json.dumps(msg)
-    basic_publish(Queue.ATTRIBUTE_RES, msg)
+    # basic_publish(Queue.ATTRIBUTE_RES, msg)
 
 
 def message_handling(client, userdata, msg):
@@ -57,16 +76,17 @@ def message_handling(client, userdata, msg):
             try:
                 payload = json.loads(payload)
                 ts = timestamp()
-                device_info = get_device_info_by_credential(token)
-                if device_info != False:
-                    if topic == MqttTopic.TELEMETRY:
-                        save_telemetry(payload, device_info, ts)
-                    elif topic == MqttTopic.ATTRIBUTE:
-                        save_attibute(payload, device_info, ts)
-                    elif topic == MqttTopic.ATTRIBUTE_REQ:
-                        print(topic)
-                    else:
-                        print(f"{msg.topic}: {msg.payload.decode()}")
+                print(payload)
+                # device_info = get_device_info_by_credential(token)
+                # if device_info != False:
+                #     if topic == MqttTopic.TELEMETRY:
+                #         save_telemetry(payload, device_info, ts)
+                #     elif topic == MqttTopic.ATTRIBUTE:
+                #         save_attibute(payload, device_info, ts)
+                #     elif topic == MqttTopic.ATTRIBUTE_REQ:
+                #         print(topic)
+                #     else:
+                #         print(f"{msg.topic}: {msg.payload.decode()}")
             except:
                 state = msg
                 logging.error(f"Worker Failed in stage {state.ljust(20, '-')}")
