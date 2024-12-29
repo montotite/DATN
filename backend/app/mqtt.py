@@ -25,6 +25,7 @@ def get_db():
         return db_api
 
 
+
 def get_topic(msg):
     token: str = msg.topic.split("/")[0]
     topic: str = msg.topic[len(token) :]
@@ -33,41 +34,41 @@ def get_topic(msg):
 
 def save_telemetry(payload, device_info, ts):
     pass
-    # for item in payload.keys():
-    #     msg = {
-    #         "payload": {"key": item, "value": payload[item]},
-    #         "ts": ts,
-    #         "device_info": device_info,
-    #     }
-    #     msg = json.dumps(msg)
-    # basic_publish(Queue.SAVE_TELEMETRY, msg)
+    for item in payload.keys():
+        msg = {
+            "payload": {"key": item, "value": payload[item]},
+            "ts": ts,
+            "device_info": device_info,
+        }
+        msg = json.dumps(msg)
+        basic_publish(Queue.SAVE_TELEMETRY, msg)
 
 
 def save_attibute(payload, device_info, ts):
     pass
 
-    # for item in payload.keys():
-    #     msg = {
-    #         "payload": {"key": item, "value": payload[item]},
-    #         "scope": AttributesScope.CLIENT_SCOPE.value,
-    #         "ts": ts,
-    #         "device_info": device_info,
-    #     }
-    #     msg = json.dumps(msg)
-    # basic_publish(Queue.SAVE_ATTRIBUTE, msg)
+    for item in payload.keys():
+        msg = {
+            "payload": {"key": item, "value": payload[item]},
+            "scope": AttributesScope.CLIENT_SCOPE.value,
+            "ts": ts,
+            "device_info": device_info,
+        }
+        msg = json.dumps(msg)
+        basic_publish(Queue.SAVE_ATTRIBUTE, msg)
 
 
 def attibute_req(msg, device_info, ts):
-    # basic_publish(Queue.ATTRIBUTE_REQ, msg)
+    basic_publish(Queue.ATTRIBUTE_REQ, msg)
     pass
 
 
 def attibute_res(msg, device_info, ts):
     pass
     msg = json.dumps(msg)
-    # basic_publish(Queue.ATTRIBUTE_RES, msg)
+    basic_publish(Queue.ATTRIBUTE_RES, msg)
 
-
+db = get_db()
 def message_handling(client, userdata, msg):
     if len(msg.topic) > 20:
         topic, token = get_topic(msg)
@@ -76,17 +77,17 @@ def message_handling(client, userdata, msg):
             try:
                 payload = json.loads(payload)
                 ts = timestamp()
-                print(payload)
-                # device_info = get_device_info_by_credential(token)
-                # if device_info != False:
-                #     if topic == MqttTopic.TELEMETRY:
-                #         save_telemetry(payload, device_info, ts)
-                #     elif topic == MqttTopic.ATTRIBUTE:
-                #         save_attibute(payload, device_info, ts)
-                #     elif topic == MqttTopic.ATTRIBUTE_REQ:
-                #         print(topic)
-                #     else:
-                #         print(f"{msg.topic}: {msg.payload.decode()}")
+                device_info = db.get_device_info_by_credential(token)
+                # print(device_info)
+                if device_info != False:
+                    if topic == MqttTopic.TELEMETRY:
+                        save_telemetry(payload, device_info, ts)
+                    elif topic == MqttTopic.ATTRIBUTE:
+                        save_attibute(payload, device_info, ts)
+                    elif topic == MqttTopic.ATTRIBUTE_REQ:
+                        print(topic)
+                    else:
+                        print(f"{msg.topic}: {msg.payload.decode()}")
             except:
                 state = msg
                 logging.error(f"Worker Failed in stage {state.ljust(20, '-')}")
