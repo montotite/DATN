@@ -53,7 +53,7 @@ function add_device_item(element) {
     item.className = "col-lg-4"
     item.innerHTML = `
 
-    <div class="card  device-card">
+    <div class="card  device-card" id="${element.id}">
         <div class="card-body">
             <div class="row">
                 <div class="d-flex ">
@@ -62,7 +62,7 @@ function add_device_item(element) {
             </div>
             <div class="row">
                 <div class="col-4">
-                    <div class="ti ti-brightness-up display-1 ${status}"> </div>
+                    <div class="ti ti-brightness-up display-1 ${status}" id="${element.id}" onclick=device_controll(this)> </div>
                 </div>
                 <div class="col-8">
                     <p class="card-text">${description}</p>
@@ -120,3 +120,15 @@ function load_device(data) {
 }
 
 api_device_list(page_size, page);
+
+
+
+function device_controll(event) {
+    console.log(event.id)
+    if (event.className == "ti ti-brightness-up display-1 text-warning") {
+        event.className = "ti ti-brightness-up display-1 "
+    }
+    else {
+        event.className = "ti ti-brightness-up display-1 text-warning"
+    }
+}
