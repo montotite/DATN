@@ -38,17 +38,42 @@ function add_device_item(element) {
     }
 
     var description = additional_info.description || ""
+    var y = Math.random();
+    if (y < 0.5) {
+
+        y = 0
+        var status = ""
+    }
+
+    else {
+        y = 1
+        var status = "text-warning"
+    }
     const item = document.createElement('div');
-    item.className = "col-lg-3"
+    item.className = "col-lg-4"
     item.innerHTML = `
-    <div class="card">
+
+    <div class="card  device-card">
         <div class="card-body">
-            <h5 class="card-title">${element.name}</h5>
-            <p class="card-text">${description}</p>
-            <p class="card-text">Thời gian tạo: ${time}</p>
+            <div class="row">
+                <div class="d-flex ">
+                    <h5 class="card-title">${element.name}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="ti ti-brightness-up display-1 ${status}"> </div>
+                </div>
+                <div class="col-8">
+                    <p class="card-text">${description}</p>
+                    <p class="card-text">Thời gian tạo: ${time}</p>
+                </div>
+            </div>
+            <div class="row">
             <a href="/device/${element.id}" class="card-link">Chi tiết</a>
+            </div>
         </div>
-    </div>    
+    </div>
     `
     return item
 }
