@@ -371,7 +371,7 @@ class Crud:
             self.db.rollback()
             return False
 
-    def get_atribute_value(self, id: str, scope: str = None, keys: list = []):
+    def get_atribute_value(self, id: str, scope: str = None, keys: list = None):
         data = self.db.query(Attribute)
         data = data.filter(
             Attribute.entity_id == str(id),
@@ -383,7 +383,7 @@ class Crud:
             data = data.filter(
                 Attribute.attribute_type == str(scope),
             )
-        if keys != []:
+        if keys != None:
             data = data.filter(
                 Attribute.attribute_key.in_(tuple(keys)),
             )

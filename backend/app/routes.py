@@ -238,16 +238,19 @@ def delete_attribute_key(
 
 @router.get(path="/plugins/telemetry/value/attribute", tags=[tags[2]])
 def get_attribute_values(
-    id: UUID, scope: AttributesScope, keys: str, db=Depends(get_db)
+    id: UUID, scope: AttributesScope = None, keys: str = None, db=Depends(get_db)
 ):
-    keys = keys.split(",")
-    data = Crud(db).get_atribute_value(str(id), scope.value, keys)
-
-    return [
-        {item["attribute_key"]: {"value": item["value"], "ts": item["ts"]}}
-        for item in data
-    ]
-
+    if keys != None:
+        keys = keys.split(",")
+    data = Crud(db).get_atribute_value(str(id), scope, keys)
+    rs = {}
+    for item in data:
+        if rs.get(item["attribute_type"]) == None:
+            rs[item["attribute_type"]] = []
+        rs[item["attribute_type"]].append(
+            {item["attribute_key"]: {"value": item["value"], "ts": item["ts"]}}
+        )
+    return rs
 
 @router.post(path="/plugins/telemetry", tags=[tags[2]])
 def save_atribute(

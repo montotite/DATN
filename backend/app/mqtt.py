@@ -104,13 +104,13 @@ def callback(ch, method, properties, body):
         state = "START"
         body = body.decode("utf8").replace("'", '"')
         body = json.loads(body)
-        # print(body)
         credential = body["device_info"]["credential"]
         topic = f"{credential}{MqttTopic.ATTRIBUTE_RES.value}"
         key = body["payload"]["key"]
         value = body["payload"]["value"]
         msg = {key: value}
-        client.publish(topic, json.dumps(msg), 0)
+        # client.publish(topic, json.dumps(msg), 0)
+        print(msg)
         state = "DONE"
         ch.basic_ack(method.delivery_tag)
     except:
