@@ -138,7 +138,9 @@ def mqtt():
         client.loop_forever()
     except:
         print("Caught an Exception, something went wrong...")
+        logging.error(f"Caught an Exception, something went wrong...")
         client.disconnect()
+        logging.error(f"Disconnecting from the MQTT broker")
         print("Disconnecting from the MQTT broker")
         mqtt()
 
