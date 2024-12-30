@@ -144,6 +144,8 @@ def mqtt():
 
 
 if __name__ == "__main__":
+    if not os.path.exists("../logs")
+        os.mkdir("../logs")
     logging.basicConfig(
         filename="../logs/mqtt.log",
         filemode="a",
