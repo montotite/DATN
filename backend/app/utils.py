@@ -5,12 +5,13 @@ import uuid
 import random
 import pika
 import string
-from sqlalchemy.orm import Session
-from fastapi import HTTPException, status
-# from sqlalchemy import desc, or_, func, text
-from sqlalchemy.dialects import postgresql as pg
-from sqlalchemy.sql import label
 import sqlalchemy as sa
+from sqlalchemy.sql import label
+from sqlalchemy.orm import Session
+
+# from sqlalchemy import desc, or_, func, text
+from fastapi import HTTPException, status
+from sqlalchemy.dialects import postgresql as pg
 
 from schemas import AttributesScope, EntityTyppe
 from models import *
@@ -71,43 +72,62 @@ class Crud:
     def __init__(self, db) -> None:
         self.db: Session = db
 
-    def insert_or_update_attribute(self,entity_id, attribute_type, attribute_key, value, last_update_ts):
+    def insert_or_update_attribute(
+        self,
+        entity_id,
+        entity_type,
+        attribute_type,
+        attribute_key,
+        value,
+        last_update_ts,
+    ):
         try:
-            stmt = sa.text(''' 
-                INSERT INTO attribute_kv (entity_id, attribute_type, attribute_key, value, last_update_ts) 
-                VALUES (:entity_id, :attribute_type, :attribute_key, :value, :last_update_ts)
-                ON CONFLICT (entity_id, attribute_type, attribute_key) DO UPDATE 
+            stmt = sa.text(
+                """ 
+                INSERT INTO attribute_kv (entity_id, entity_type, attribute_type, attribute_key, value, last_update_ts) 
+                VALUES (:entity_id, :entity_type, :attribute_type, :attribute_key, :value, :last_update_ts)
+                ON CONFLICT (entity_id, entity_type, attribute_type, attribute_key) DO UPDATE 
                 SET value = excluded.value, 
                     last_update_ts = excluded.last_update_ts;
-                ''')
-            # print(last_update_ts)
-            self.db.execute(stmt, {'entity_id': str(entity_id),
-                            'attribute_type': attribute_type,
-                            'attribute_key': attribute_key,
-                            'value': value,
-                            'last_update_ts': last_update_ts})
+                """
+            )
+
+            params = {
+                "entity_id": str(entity_id),
+                "entity_type": entity_type,
+                "attribute_type": attribute_type,
+                "attribute_key": attribute_key,
+                "value": value,
+                "last_update_ts": last_update_ts,
+            }
+            self.db.execute(
+                stmt,
+                params,
+            )
             self.db.commit()
             return True
         except:
             self.db.rollback()
             return False
-    def insert_or_update_telemetry(self,entity_id, key, value, ts):
+
+    def insert_or_update_telemetry(self, entity_id, key, value, ts):
         try:
-            stmt = sa.text(''' 
-                INSERT INTO ts_kv (entity_id, key, value, ts) 
+            stmt = sa.text(
+                """
+                INSERT INTO ts_kv (entity_id, key, value, ts)
                 VALUES (:entity_id, :key, :value, :ts)
-                ON CONFLICT (entity_id, key, ts) DO UPDATE 
+                ON CONFLICT (entity_id, key, ts) DO UPDATE
                 SET value = excluded.value;
-                ''')
-            self.db.execute(stmt, {'entity_id': entity_id,
-                            'key': key,
-                            'value': value,
-                            'ts': ts})
+                """
+            )
+            params = {"entity_id": entity_id, "key": key, "value": value, "ts": ts}
+            self.db.execute(stmt, params)
             self.db.commit()
             return True
         except:
             self.db.rollback()
             return False
+
     def update_telemetry(self, entity_id: str, key: str, ts: int, value: str):
         try:
             data = self.db.query(Telemetry)

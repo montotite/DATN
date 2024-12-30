@@ -21,37 +21,31 @@ def get_db():
         db_api = Crud(db)
         return db_api
 
+
 def save_telemetry(body):
-    ts = body['ts']
-    payload = body['payload']
-    device_info = body['device_info']
-    entity_id = device_info['id']
-    key = payload['key']
-    value = payload['value']
+    ts = body["ts"]
+    payload = body["payload"]
+    device_info = body["device_info"]
+    entity_id = device_info["id"]
+    key = payload["key"]
+    value = payload["value"]
     status = db.insert_or_update_telemetry(str(entity_id), key, value, ts)
-    print(status)
-    print(key)
 
 
 def save_attibute(body):
-    last_update_ts = body['ts']
-    attribute_type = body['scope']
-    payload = body['payload']
-    device_info = body['device_info']
-    entity_id = device_info['id']
-    attribute_key = payload['key']
+    last_update_ts = body["ts"]
+    attribute_type = body["scope"]
+    payload = body["payload"]
+    device_info = body["device_info"]
+    entity_id = device_info["id"]
+    attribute_key = payload["key"]
 
-    value = payload['value']
+    value = payload["value"]
     if type(value) is dict:
         value = json.dumps(value)
-    status = db.insert_or_update_attribute(str(entity_id),
-                                            attribute_type,
-                                            attribute_key,
-                                            value,
-                                            last_update_ts)
-    
-    print(status)
-    print(attribute_key)
+    status = db.insert_or_update_attribute(
+        str(entity_id), "DEVICE", attribute_type, attribute_key, value, last_update_ts
+    )
 
     if attribute_type == AttributesScope.SHARED_SCOPE:
         message = json.dumps(body)
@@ -60,21 +54,21 @@ def save_attibute(body):
 
 def callback(ch, method, properties, body):
     try:
-        state = 'START'
-        body = body.decode('utf8').replace("'", '"')
+        state = "START"
+        body = body.decode("utf8").replace("'", '"')
         body = json.loads(body)
         # print(body)
-        state = 'INSERT'
+        state = "INSERT"
         if method.routing_key == Queue.SAVE_TELEMETRY:
             save_telemetry(body)
         elif method.routing_key == Queue.SAVE_ATTRIBUTE:
             save_attibute(body)
         else:
             print(f" [x] {method.routing_key}:{body}")
-        state = ''
-        state = ''
-        state = ''
-        state = 'DONE'
+        state = ""
+        state = ""
+        state = ""
+        state = "DONE"
     except:
         logging.error(f"Worker Failed in stage {state.ljust(20, '-')}")
     finally:
@@ -82,25 +76,27 @@ def callback(ch, method, properties, body):
 
 
 db = get_db()
+
+
 def main():
     channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue=Queue.SAVE_TELEMETRY,
-                          on_message_callback=callback)
-    channel.basic_consume(queue=Queue.SAVE_ATTRIBUTE,
-                          on_message_callback=callback)
-    print(' [*] Waiting for messages. To exit press CTRL+C')
+    channel.basic_consume(queue=Queue.SAVE_TELEMETRY, on_message_callback=callback)
+    channel.basic_consume(queue=Queue.SAVE_ATTRIBUTE, on_message_callback=callback)
+    print(" [*] Waiting for messages. To exit press CTRL+C")
     channel.start_consuming()
 
 
-if __name__ == '__main__':
-    logging.basicConfig(filename="../logs/save_telemetry.log",
-                        filemode="a",
-                        format='%(levelname)s\t%(asctime)s\t%(message)s',
-                        level=logging.INFO)
+if __name__ == "__main__":
+    logging.basicConfig(
+        filename="../logs/save_telemetry.log",
+        filemode="a",
+        format="%(levelname)s\t%(asctime)s\t%(message)s",
+        level=logging.INFO,
+    )
     try:
         main()
     except KeyboardInterrupt:
-        print('Interrupted')
+        print("Interrupted")
         try:
             sys.exit(0)
         except SystemExit:
