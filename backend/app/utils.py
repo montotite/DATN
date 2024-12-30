@@ -5,11 +5,13 @@ import uuid
 import random
 import pika
 import string
+import sqlalchemy as sa
+from sqlalchemy.sql import label
 from sqlalchemy.orm import Session
+
+# from sqlalchemy import desc, or_, func, text
 from fastapi import HTTPException, status
 from sqlalchemy.dialects import postgresql as pg
-from sqlalchemy.sql import label
-import sqlalchemy as sa
 
 from schemas import AttributesScope, EntityTyppe
 from models import *
@@ -57,7 +59,7 @@ def generate_credentials():
     return res
 
 
-def basic_publish(routing_key, message):
+def basic_publish(channel, routing_key, message):
     channel.basic_publish(
         exchange="",
         routing_key=routing_key,
@@ -69,6 +71,62 @@ def basic_publish(routing_key, message):
 class Crud:
     def __init__(self, db) -> None:
         self.db: Session = db
+
+    def insert_or_update_attribute(
+        self,
+        entity_id,
+        entity_type,
+        attribute_type,
+        attribute_key,
+        value,
+        last_update_ts,
+    ):
+        try:
+            stmt = sa.text(
+                """ 
+                INSERT INTO attribute_kv (entity_id, entity_type, attribute_type, attribute_key, value, last_update_ts) 
+                VALUES (:entity_id, :entity_type, :attribute_type, :attribute_key, :value, :last_update_ts)
+                ON CONFLICT (entity_id, entity_type, attribute_type, attribute_key) DO UPDATE 
+                SET value = excluded.value, 
+                    last_update_ts = excluded.last_update_ts;
+                """
+            )
+
+            params = {
+                "entity_id": str(entity_id),
+                "entity_type": entity_type,
+                "attribute_type": attribute_type,
+                "attribute_key": attribute_key,
+                "value": value,
+                "last_update_ts": last_update_ts,
+            }
+            self.db.execute(
+                stmt,
+                params,
+            )
+            self.db.commit()
+            return True
+        except:
+            self.db.rollback()
+            return False
+
+    def insert_or_update_telemetry(self, entity_id, key, value, ts):
+        try:
+            stmt = sa.text(
+                """
+                INSERT INTO ts_kv (entity_id, key, value, ts)
+                VALUES (:entity_id, :key, :value, :ts)
+                ON CONFLICT (entity_id, key, ts) DO UPDATE
+                SET value = excluded.value;
+                """
+            )
+            params = {"entity_id": entity_id, "key": key, "value": value, "ts": ts}
+            self.db.execute(stmt, params)
+            self.db.commit()
+            return True
+        except:
+            self.db.rollback()
+            return False
 
     def update_telemetry(self, entity_id: str, key: str, ts: int, value: str):
         try:
@@ -313,19 +371,27 @@ class Crud:
             self.db.rollback()
             return False
 
-    def get_atribute_value(self, id: str, scope: str, keys: list):
+    def get_atribute_value(self, id: str, scope: str = None, keys: list = None):
         data = self.db.query(Attribute)
         data = data.filter(
             Attribute.entity_id == str(id),
-            Attribute.attribute_type == str(scope),
-            Attribute.attribute_key.in_(tuple(keys)),
+            # Attribute.attribute_key.in_(tuple(keys)),
             #    or_(Attribute.attribute_type == str(item)
             #    for item in keys)
         )
+        if scope != None:
+            data = data.filter(
+                Attribute.attribute_type == str(scope),
+            )
+        if keys != None:
+            data = data.filter(
+                Attribute.attribute_key.in_(tuple(keys)),
+            )
         data = data.all()
         data = [
             {
                 "attribute_key": item.attribute_key,
+                "attribute_type": item.attribute_type,
                 "value": item.value,
                 "ts": item.last_update_ts,
             }
@@ -478,6 +544,20 @@ class Crud:
         except:
             self.db.rollback()
             return False
+
+    def get_device_info_by_credential(self, credential: str):
+        data = self.db.query(Device)
+        data = data.filter(Device.credential == str(credential))
+        data = data.first()
+        if data == None:
+            return False
+        return {
+            "id": str(data.id),
+            "name": data.name,
+            "type": data.type,
+            "created_time": data.created_time,
+            "credential": data.credential,
+        }
 
     def get_device_info(self, id: str):
         data = self.db.query(Device)

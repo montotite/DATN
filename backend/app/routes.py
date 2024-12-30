@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from utils import *
 from schemas import *
-from helpers import get_db, Queue, get_channels
+from helpers import get_db, Queue, get_channels, channel
 
 # Mock data
 energy_data = [
@@ -90,6 +90,11 @@ def get_device_list(offset_limit=Depends(get_offset_limit), db=Depends(get_db)):
     offset, limit = offset_limit
     db = Crud(db)
     records, length = db.get_device_list(offset, limit)
+    for item in records:
+        item["attrbutes"] = {}
+        for attribute in db.get_atribute_value(item["id"]):
+            item["attrbutes"][attribute["attribute_type"]] = attribute
+            item["attrbutes"][attribute["attribute_type"]].pop("attribute_type")
     data = records, length
     return get_pages_records(data, offset_limit)
 
@@ -233,16 +238,19 @@ def delete_attribute_key(
 
 @router.get(path="/plugins/telemetry/value/attribute", tags=[tags[2]])
 def get_attribute_values(
-    id: UUID, scope: AttributesScope, keys: str, db=Depends(get_db)
+    id: UUID, scope: AttributesScope = None, keys: str = None, db=Depends(get_db)
 ):
-    keys = keys.split(",")
-    data = Crud(db).get_atribute_value(str(id), scope.value, keys)
-
-    return [
-        {item["attribute_key"]: {"value": item["value"], "ts": item["ts"]}}
-        for item in data
-    ]
-
+    if keys != None:
+        keys = keys.split(",")
+    data = Crud(db).get_atribute_value(str(id), scope, keys)
+    rs = {}
+    for item in data:
+        if rs.get(item["attribute_type"]) == None:
+            rs[item["attribute_type"]] = []
+        rs[item["attribute_type"]].append(
+            {item["attribute_key"]: {"value": item["value"], "ts": item["ts"]}}
+        )
+    return rs
 
 @router.post(path="/plugins/telemetry", tags=[tags[2]])
 def save_atribute(
@@ -263,7 +271,7 @@ def save_atribute(
             "scope": scope.value,
             "device_info": device_info,
         }
-        basic_publish(Queue.SAVE_ATTRIBUTE, json.dumps(message))
+        basic_publish(channel, Queue.SAVE_ATTRIBUTE, json.dumps(message))
     return "OK"
 
 
@@ -278,7 +286,7 @@ def save_telemetry(id: UUID, body: dict, db=Depends(get_db)):
             "ts": timestamp(),
             "device_info": device_info,
         }
-        basic_publish(Queue.SAVE_TELEMETRY, json.dumps(message))
+        basic_publish(channel, Queue.SAVE_TELEMETRY, json.dumps(message))
     return "OK"
 
 

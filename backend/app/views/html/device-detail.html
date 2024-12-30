@@ -76,14 +76,6 @@
                                                     <h5 class="mb-0">Dữ liệu cảm biến</h5>
                                                 </div>
                                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-
-                                                    <!-- <li class="nav-item" role="presentation">
-                                                        <a class="nav-link" id="profile-tab" data-bs-toggle="tab"
-                                                            href="#profile5" role="tab" aria-controls="profile"
-                                                            aria-selected="false" tabindex="-1">
-                                                            <span>Tab 2</span>
-                                                        </a>
-                                                    </li> -->
                                                     <li class="nav-item dropdown" role="presentation">
                                                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                                                             href="javascript:void(0)" role="button"
@@ -98,7 +90,7 @@
                                                                     tabindex="-1">Server</a>
                                                             </li>
                                                             <li>
-                                                                <a class="dropdown-item" id="dropdown2-tab"
+                                                                <a class="dropdown-item  active" id="dropdown2-tab"
                                                                     href="#dropdown2" role="tab" data-bs-toggle="tab"
                                                                     aria-controls="dropdown2" aria-selected="false"
                                                                     tabindex="-1">Clinet</a>
@@ -112,7 +104,7 @@
                                                         </ul>
                                                     </li>
                                                     <li class="nav-item" role="presentation">
-                                                        <a class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                                        <a class="nav-link " id="home-tab" data-bs-toggle="tab"
                                                             href="#home5" role="tab" aria-controls="home5"
                                                             aria-expanded="true" aria-selected="true">
                                                             <span>Telemetry</span>
@@ -120,9 +112,8 @@
                                                     </li>
                                                 </ul>
                                                 <div class="tab-content tabcontent-border p-3" id="myTabContent">
-                                                    <div role="tabpanel" class="tab-pane fade active show" id="home5"
+                                                    <div role="tabpanel" class="tab-pane fade" id="home5"
                                                         aria-labelledby="home-tab">
-
                                                         <div class="table-responsive">
                                                             <table class="table">
                                                                 <thead class="bg-primary text-white">
@@ -153,12 +144,12 @@
                                                                         <th>giá trị</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody>
-                                                                    <tr>
+                                                                <tbody id='share_scope'>
+                                                                    <!-- <tr>
                                                                         <td>Nigam</td>
                                                                         <td>Eichmann</td>
                                                                         <td>@Sonu</td>
-                                                                    </tr>
+                                                                    </tr> -->
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -174,18 +165,18 @@
                                                                         <th>giá trị</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody>
-                                                                    <tr>
+                                                                <tbody id="server_scope">
+                                                                    <!-- <tr>
                                                                         <td>Nigam</td>
                                                                         <td>Eichmann</td>
                                                                         <td>@Sonu</td>
-                                                                    </tr>
+                                                                    </tr> -->
                                                                 </tbody>
                                                             </table>
                                                         </div>
                                                     </div>
-                                                    <div class="tab-pane fade" id="dropdown2" role="tabpanel"
-                                                        aria-labelledby="dropdown2-tab">
+                                                    <div class="tab-pane fade  active show" id="dropdown2"
+                                                        role="tabpanel" aria-labelledby="dropdown2-tab">
                                                         <div class="table-responsive">
                                                             <table class="table">
                                                                 <thead class="bg-primary text-white">
@@ -195,12 +186,12 @@
                                                                         <th>giá trị</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody>
-                                                                    <tr>
+                                                                <tbody id="clinet_scope">
+                                                                    <!-- <tr>
                                                                         <td>Nigam</td>
                                                                         <td>Eichmann</td>
-                                                                        <td>@Sonu</td>
-                                                                    </tr>
+                                                                        <td>@1</td>
+                                                                    </tr> -->
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -223,57 +214,10 @@
     <script src="../assets/js/app.min.js"></script>
     <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
-    <!-- <script src="../assets/js/device.js"></script> -->
+    <script src="../assets/js/device-detail.js"></script>
     <!-- solar icons -->
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
     <script>
-        const host = window.location.origin
-        async function event_delete(event) {
-            console.log(entity_id.value)
-            const rawResponse = await fetch(`${host}/api/device?id=${entity_id.value}`, {
-                method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-
-            });
-            const content = await rawResponse.json();
-            const status = await rawResponse.status;
-            if (status == 200) {
-                location.href = "/devices";
-            }
-        }
-        function addZero(x, n) {
-            while (x.toString().length < n) {
-                x = "0" + x;
-            }
-            return x;
-        }
-        function convenTime(created_time) {
-
-            var date = new Date(parseInt(created_time));
-            var day = addZero(date.getDay(), 2);
-            var month = addZero(date.getMonth(), 2);
-            var year = addZero(date.getFullYear(), 4);
-
-            var h = addZero(date.getHours(), 2);
-            var m = addZero(date.getMinutes(), 2);
-            var s = addZero(date.getSeconds(), 2);
-            var ms = addZero(date.getMilliseconds(), 3);
-            var time = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s + ":" + ms;
-            return time
-        }
-        const entity_createtime = document.getElementById("entity_createtime")
-        const btn_delete = document.getElementById("btn_delete")
-        const entity_id = document.getElementById("entity_id")
-
-
-        btn_delete.addEventListener("click", event_delete)
-        const createtime = entity_createtime.value
-        entity_createtime.value = convenTime(createtime)
-
-
 
 
 

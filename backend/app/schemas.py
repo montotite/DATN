@@ -77,6 +77,7 @@ class DeviceInfo(BaseModel):
     created_time: Optional[int] = 0
     type: Optional[str] = ""
     additional_info: Optional[str] = ""
+    attrbutes: Optional[dict] = {}
 
 
 class DeviceList(RecordList):

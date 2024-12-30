@@ -38,17 +38,38 @@ function add_device_item(element) {
     }
 
     var description = additional_info.description || ""
+    console.log(element.attrbutes.SHARED_SCOPE)
+    var status = ""
+    if (element.attrbutes.SHARED_SCOPE) {
+        if (element.attrbutes.SHARED_SCOPE.value == 'true') {
+            var status = "text-warning"
+        }
+    }
     const item = document.createElement('div');
-    item.className = "col-lg-3"
+    item.className = "col-lg-4"
     item.innerHTML = `
-    <div class="card">
+
+    <div class="card  device-card" id="${element.id}">
         <div class="card-body">
-            <h5 class="card-title">${element.name}</h5>
-            <p class="card-text">${description}</p>
-            <p class="card-text">Thời gian tạo: ${time}</p>
+            <div class="row">
+                <div class="d-flex ">
+                    <h5 class="card-title">${element.name}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="ti ti-brightness-up display-1 ${status}" id="${element.id}" onclick=device_controll(this)> </div>
+                </div>
+                <div class="col-8">
+                    <p class="card-text">${description}</p>
+                    <p class="card-text">Thời gian tạo: ${time}</p>
+                </div>
+            </div>
+            <div class="row">
             <a href="/device/${element.id}" class="card-link">Chi tiết</a>
+            </div>
         </div>
-    </div>    
+    </div>
     `
     return item
 }
@@ -95,3 +116,42 @@ function load_device(data) {
 }
 
 api_device_list(page_size, page);
+
+
+
+async function save_atribute_api(entity_id, body) {
+    const rawResponse = await fetch(`${host}/api/plugins/telemetry?id=${entity_id}&scope=SHARED_SCOPE`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    });
+    const content = await rawResponse.json();
+    const status = await rawResponse.status;
+    if (status == 200) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+async function device_controll(event) {
+    console.log(event.className)
+    var className;
+    if (event.className.includes("text-warning")) {
+        className = event.className.replace("text-warning", "");
+        var body = { "relay1": false }
+    }
+    else {
+        var body = { "relay1": true }
+        className = `${event.className} text-warning`
+    }
+    className = className.trim()
+    const st = await save_atribute_api(event.id.toString(), body);
+    if (st) {
+        event.className = className;
+    }
+}
