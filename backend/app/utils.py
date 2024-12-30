@@ -59,7 +59,7 @@ def generate_credentials():
     return res
 
 
-def basic_publish(routing_key, message):
+def basic_publish(channel, routing_key, message):
     channel.basic_publish(
         exchange="",
         routing_key=routing_key,
@@ -371,19 +371,27 @@ class Crud:
             self.db.rollback()
             return False
 
-    def get_atribute_value(self, id: str, scope: str, keys: list):
+    def get_atribute_value(self, id: str, scope: str = None, keys: list = []):
         data = self.db.query(Attribute)
         data = data.filter(
             Attribute.entity_id == str(id),
-            Attribute.attribute_type == str(scope),
-            Attribute.attribute_key.in_(tuple(keys)),
+            # Attribute.attribute_key.in_(tuple(keys)),
             #    or_(Attribute.attribute_type == str(item)
             #    for item in keys)
         )
+        if scope != None:
+            data = data.filter(
+                Attribute.attribute_type == str(scope),
+            )
+        if keys != []:
+            data = data.filter(
+                Attribute.attribute_key.in_(tuple(keys)),
+            )
         data = data.all()
         data = [
             {
                 "attribute_key": item.attribute_key,
+                "attribute_type": item.attribute_type,
                 "value": item.value,
                 "ts": item.last_update_ts,
             }

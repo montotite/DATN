@@ -3,9 +3,11 @@ import sys
 import os
 
 # import threading
-from threading import Thread
-import paho.mqtt as mqttc
+# import paho.mqtt as mqttc
 import paho.mqtt.client as paho
+
+from threading import Thread
+
 from utils import *
 from schemas import AttributesScope
 from helpers import (
@@ -23,7 +25,6 @@ def get_db():
     with SessionLocal() as db:
         db_api = Crud(db)
         return db_api
-
 
 
 def get_topic(msg):
@@ -68,7 +69,10 @@ def attibute_res(msg, device_info, ts):
     msg = json.dumps(msg)
     basic_publish(Queue.ATTRIBUTE_RES, msg)
 
+
 db = get_db()
+
+
 def message_handling(client, userdata, msg):
     if len(msg.topic) > 20:
         topic, token = get_topic(msg)
@@ -100,7 +104,7 @@ def callback(ch, method, properties, body):
         state = "START"
         body = body.decode("utf8").replace("'", '"')
         body = json.loads(body)
-        print(body)
+        # print(body)
         credential = body["device_info"]["credential"]
         topic = f"{credential}{MqttTopic.ATTRIBUTE_RES.value}"
         key = body["payload"]["key"]

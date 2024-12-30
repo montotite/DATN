@@ -49,10 +49,10 @@ def save_attibute(body):
 
     if attribute_type == AttributesScope.SHARED_SCOPE:
         message = json.dumps(body)
-        basic_publish(Queue.ATTRIBUTE_RES, message)
+        basic_publish(channel, Queue.ATTRIBUTE_RES, message)
 
 
-def callback(ch, method, properties, body):
+def callback_telemetry(ch, method, properties, body):
     try:
         state = "START"
         body = body.decode("utf8").replace("'", '"')
@@ -61,12 +61,27 @@ def callback(ch, method, properties, body):
         state = "INSERT"
         if method.routing_key == Queue.SAVE_TELEMETRY:
             save_telemetry(body)
-        elif method.routing_key == Queue.SAVE_ATTRIBUTE:
-            save_attibute(body)
         else:
             print(f" [x] {method.routing_key}:{body}")
         state = ""
-        state = ""
+        state = "DONE"
+    except:
+        logging.error(f"Worker Failed in stage {state.ljust(20, '-')}")
+    finally:
+        ch.basic_ack(method.delivery_tag)
+
+
+def callback_attribute(ch, method, properties, body):
+    try:
+        state = "START"
+        body = body.decode("utf8").replace("'", '"')
+        body = json.loads(body)
+        # print(body)
+        state = "INSERT"
+        if method.routing_key == Queue.SAVE_ATTRIBUTE:
+            save_attibute(body)
+        else:
+            print(f" [x] {method.routing_key}:{body}")
         state = ""
         state = "DONE"
     except:
@@ -80,8 +95,12 @@ db = get_db()
 
 def main():
     channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue=Queue.SAVE_TELEMETRY, on_message_callback=callback)
-    channel.basic_consume(queue=Queue.SAVE_ATTRIBUTE, on_message_callback=callback)
+    channel.basic_consume(
+        queue=Queue.SAVE_TELEMETRY, on_message_callback=callback_telemetry
+    )
+    channel.basic_consume(
+        queue=Queue.SAVE_ATTRIBUTE, on_message_callback=callback_attribute
+    )
     print(" [*] Waiting for messages. To exit press CTRL+C")
     channel.start_consuming()
 
