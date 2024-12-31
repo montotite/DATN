@@ -30,7 +30,7 @@ function add_device_item(element) {
     var m = addZero(date.getMinutes(), 2);
     var s = addZero(date.getSeconds(), 2);
     var ms = addZero(date.getMilliseconds(), 3);
-    var time = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s + ":" + ms;
+    var time = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s;
 
     var additional_info = {};
     if (element.additional_info) {

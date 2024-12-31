@@ -32,7 +32,7 @@ function convenTime(created_time) {
     var m = addZero(date.getMinutes(), 2);
     var s = addZero(date.getSeconds(), 2);
     var ms = addZero(date.getMilliseconds(), 3);
-    var time = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s + ":" + ms;
+    var time = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s;
     return time
 }
 
@@ -54,6 +54,9 @@ async function get_atribute_api(entity_id) {
         return false
     }
 }
+
+
+
 
 
 const entity_createtime = document.getElementById("entity_createtime")
@@ -83,7 +86,7 @@ async function load_telemetry() {
             console.log(Object.keys(element)[0])
             const item = document.createElement('tr');
             item.innerHTML = `
-            <td>${element[Object.keys(element)[0]].ts}</td>
+            <td>${convenTime(element[Object.keys(element)[0]].ts)}</td>
             <td>${Object.keys(element)[0]}</td>
             <td>${element[Object.keys(element)[0]].value}</td>
             `
@@ -96,7 +99,7 @@ async function load_telemetry() {
             console.log(Object.keys(element)[0])
             const item = document.createElement('tr');
             item.innerHTML = `
-            <td>${element[Object.keys(element)[0]].ts}</td>
+            <td>${convenTime(element[Object.keys(element)[0]].ts)}</td>
             <td>${Object.keys(element)[0]}</td>
             <td>${element[Object.keys(element)[0]].value}</td>
             `
@@ -109,7 +112,7 @@ async function load_telemetry() {
             console.log(Object.keys(element)[0])
             const item = document.createElement('tr');
             item.innerHTML = `
-            <td>${element[Object.keys(element)[0]].ts}</td>
+            <td>${convenTime(element[Object.keys(element)[0]].ts)}</td>
             <td>${Object.keys(element)[0]}</td>
             <td>${element[Object.keys(element)[0]].value}</td>
             `
