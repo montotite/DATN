@@ -22,7 +22,7 @@ function load_summary(data) {
     cost_month.innerText = `${data.month.cost} VND`
 
     cons_year.innerText = `${data.year.cons} kwh`
-    cons_year.innerText = `${data.year.cost} VND`
+    cost_year.innerText = `${data.year.cost} VND`
 
     cons_total.innerText = `${data.total.cons} kwh`
     cost_total.innerText = `${data.total.cost} VND`

@@ -30,13 +30,38 @@ tags = [
     "Asset",
     "Relation",
     "Dashboard",
+    "Alarm",
 ]
 router = APIRouter()
 
 
-@router.get(path="/dashboard/summary", tags=[tags[5]])
-def get_asset_list(db=Depends(get_db)):
+@router.get(path="/alarm", tags=[tags[6]])
+def get_alarm_list(offset_limit=Depends(get_offset_limit), db=Depends(get_db)):
 
+    data = []
+
+    for item in range(0, 10):
+        data.append(
+            {
+                "id": "179cd5ad-b30b-407c-a2e0-cb0ee87996a9",
+                "name": f"Cường độ dòng điện vượt ngưỡng {item}",
+                "created_time": 1734968314675,
+                "type": None,
+                "value": {"value": random.randint(50, 100), "setting": 50},
+                "status": "Đã xem",
+                "additional_info": '{"description": "aaaa",}',
+            }
+        )
+    return {
+        "total_pages": 1,
+        "total_elements": 1,
+        "has_next": False,
+        "data": data,
+    }
+
+
+@router.get(path="/dashboard/summary", tags=[tags[5]])
+def get_dashboard_summary(db=Depends(get_db)):
     return {
         "today": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
         "month": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
@@ -251,6 +276,7 @@ def get_attribute_values(
             {item["attribute_key"]: {"value": item["value"], "ts": item["ts"]}}
         )
     return rs
+
 
 @router.post(path="/plugins/telemetry", tags=[tags[2]])
 def save_atribute(
