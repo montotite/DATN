@@ -23,183 +23,266 @@
             <!--  Header End -->
             <div class="body-wrapper-inner">
                 <div class="container-fluid">
+                    <!-- <div class="row">
+                        <div class="card">
+                            <div class="card-body">
+                                <h1>ok</h1>
+                            </div>
+                        </div>
+                    </div> -->
                     <div class="row">
-                        <div class="col-span-12 d-flex align-items-stretch">
-                            <div class="card w-100 overflow-hidden">
-
-                                <div class="row">
-                                    <div class="col-4">
-                                        <div class="card-body">
-                                            <h5 class="card-title fw-semibold mb-4">Chi tiết thiết bị</h5>
-                                            <form>
-                                                <div class="mb-3">
-                                                    <label class="form-label">id</label>
-                                                    <input id="entity_id" type="text" class="form-control"
-                                                        value="{{ id }}" disabled>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Tên thiết bị</label>
-                                                    <input type="text" class="form-control" id="exampleInputEmail1"
-                                                        value="{{ name }}" disabled>
-
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="exampleInputPassword1" class="form-label">Ngày
-                                                        tạo</label>
-                                                    <input type="text" class="form-control" id="entity_createtime"
-                                                        value="{{ created_time }}" disabled>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Mã kết nối thiết bị</label>
-                                                    <input type="text" class="form-control" value="{{ credential }}"
-                                                        disabled>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Mô tả</label>
-                                                    <!-- <input type="text" class="form-control" value="{{additional_info}}"
-                                                        disabled> -->
-                                                    <textarea class="form-control" rows="3" placeholder="Message"
-                                                        style="height: 85px;">{{additional_info.description}}</textarea>
-                                                </div>
-                                                <button id="btn_delete" class="btn btn-warning" type="button">Xóa thiết
-                                                    bị</button>
-                                                <button class="btn btn-danger" type="button">Chỉnh sửa</button>
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </form>
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-semibold mb-4">Chi tiết thiết bị</h5>
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label">id</label>
+                                            <input id="entity_id" type="text" class="form-control" value="{{ id }}"
+                                                disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tên thiết bị</label>
+                                            <input type="text" class="form-control" id="exampleInputEmail1"
+                                                value="{{ name }}" disabled>
 
                                         </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputPassword1" class="form-label">Ngày
+                                                tạo</label>
+                                            <input type="text" class="form-control" id="entity_createtime"
+                                                value="{{ created_time }}" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Mã kết nối thiết bị</label>
+                                            <input type="text" class="form-control" value="{{ credential }}" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Mô tả</label>
+                                            <!-- <input type="text" class="form-control" value="{{additional_info}}"
+                                                disabled> -->
+                                            <textarea class="form-control" rows="3" placeholder="Message"
+                                                style="height: 85px;">{{additional_info.description}}</textarea>
+                                        </div>
+                                        <button id="btn_delete" class="btn btn-warning" type="button">Xóa
+                                            thiết
+                                            bị</button>
+                                        <button class="btn btn-danger" type="button">Chỉnh sửa</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <h5 class="mb-0">Thông tin khác</h5>
                                     </div>
-                                    <div class="col-8">
-                                        <div class="card-body">
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <h5 class="mb-0">Dữ liệu cảm biến</h5>
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item dropdown" role="presentation">
+                                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                                                href="javascript:void(0)" role="button" aria-expanded="false">
+                                                <span>Attributes</span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" id="dropdown1-tab" href="#dropdown1"
+                                                        role="tab" data-bs-toggle="tab" aria-controls="dropdown1"
+                                                        aria-selected="false" tabindex="-1">Server</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item  active" id="dropdown2-tab"
+                                                        href="#dropdown2" role="tab" data-bs-toggle="tab"
+                                                        aria-controls="dropdown2" aria-selected="false"
+                                                        tabindex="-1">Clinet</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" id="dropdown2-tab" href="#dropdown3"
+                                                        role="tab" data-bs-toggle="tab" aria-controls="dropdown3"
+                                                        aria-selected="false" tabindex="-1">Share</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link " id="home-tab" data-bs-toggle="tab" href="#home5"
+                                                role="tab" aria-controls="home5" aria-expanded="true"
+                                                aria-selected="true">
+                                                <span>Telemetry</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link " id="home-tab" data-bs-toggle="tab" href="#alarm"
+                                                role="tab" aria-controls="home5" aria-expanded="true"
+                                                aria-selected="true">
+                                                <span>Cảnh báo</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link " id="home-tab" data-bs-toggle="tab" href="#cost"
+                                                role="tab" aria-controls="home5" aria-expanded="true"
+                                                aria-selected="true">
+                                                <span>Giá điện</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content tabcontent-border p-3" id="myTabContent">
+                                        <div role="tabpanel" class="tab-pane fade" id="home5"
+                                            aria-labelledby="home-tab">
+                                            <div class="table-responsive overflow-auto" style="height: 400px"
+                                                data-bs-spy="scroll">
+                                                <table class="table">
+                                                    <thead class="bg-primary text-white">
+                                                        <tr>
+                                                            <th>Thời gian cập nhật</th>
+                                                            <th>Biến dữ liệu</th>
+                                                            <th>giá trị</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Nigam</td>
+                                                            <td>Eichmann</td>
+                                                            <td>@Sonu</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="dropdown3" role="tabpanel"
+                                            aria-labelledby="profile-tab">
+                                            <div class="table-responsive overflow-auto" style="height: 400px"
+                                                data-bs-spy="scroll">
+                                                <table class="table">
+                                                    <thead class="bg-primary text-white">
+                                                        <tr>
+                                                            <th>Thời gian cập nhật</th>
+                                                            <th>Biến dữ liệu</th>
+                                                            <th>giá trị</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id='share_scope'>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="dropdown1" role="tabpanel"
+                                            aria-labelledby="dropdown1-tab">
+                                            <div class="table-responsive overflow-auto" style="height: 400px"
+                                                data-bs-spy="scroll">
+                                                <table class="table">
+                                                    <thead class="bg-primary text-white">
+                                                        <tr>
+                                                            <th>Thời gian cập nhật</th>
+                                                            <th>Biến dữ liệu</th>
+                                                            <th>giá trị</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="server_scope">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade  active show" id="dropdown2" role="tabpanel"
+                                            aria-labelledby="dropdown2-tab">
+                                            <div class="table-responsive overflow-auto" style="height: 400px"
+                                                data-bs-spy="scroll">
+                                                <table class="table">
+                                                    <thead class="bg-primary text-white">
+                                                        <tr>
+                                                            <th>Thời gian cập nhật</th>
+                                                            <th>Biến dữ liệu</th>
+                                                            <th>giá trị</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="clinet_scope">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="alarm" role="tabpanel"
+                                            aria-labelledby="dropdown1-tab">
+                                            <div class="row">
+                                                <div class="mb-3 row">
+                                                    <label for="example-text-input" class="col-md-5 col-form-label">Công
+                                                        suất tối đa (W)</label>
+                                                    <div class="col-md-7">
+                                                        <input class="form-control" type="number" value=5
+                                                            id="example-text-input">
+                                                    </div>
                                                 </div>
-                                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                                    <li class="nav-item dropdown" role="presentation">
-                                                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-                                                            href="javascript:void(0)" role="button"
-                                                            aria-expanded="false">
-                                                            <span>Attributes</span>
-                                                        </a>
-                                                        <ul class="dropdown-menu">
-                                                            <li>
-                                                                <a class="dropdown-item" id="dropdown1-tab"
-                                                                    href="#dropdown1" role="tab" data-bs-toggle="tab"
-                                                                    aria-controls="dropdown1" aria-selected="false"
-                                                                    tabindex="-1">Server</a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="dropdown-item  active" id="dropdown2-tab"
-                                                                    href="#dropdown2" role="tab" data-bs-toggle="tab"
-                                                                    aria-controls="dropdown2" aria-selected="false"
-                                                                    tabindex="-1">Clinet</a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="dropdown-item" id="dropdown2-tab"
-                                                                    href="#dropdown3" role="tab" data-bs-toggle="tab"
-                                                                    aria-controls="dropdown3" aria-selected="false"
-                                                                    tabindex="-1">Share</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="nav-item" role="presentation">
-                                                        <a class="nav-link " id="home-tab" data-bs-toggle="tab"
-                                                            href="#home5" role="tab" aria-controls="home5"
-                                                            aria-expanded="true" aria-selected="true">
-                                                            <span>Telemetry</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                                <div class="tab-content tabcontent-border p-3" id="myTabContent">
-                                                    <div role="tabpanel" class="tab-pane fade" id="home5"
-                                                        aria-labelledby="home-tab">
-                                                        <div class="table-responsive overflow-auto"
-                                                            style="height: 400px" data-bs-spy="scroll">
-                                                            <table class="table">
-                                                                <thead class="bg-primary text-white">
-                                                                    <tr>
-                                                                        <th>Thời gian cập nhật</th>
-                                                                        <th>Biến dữ liệu</th>
-                                                                        <th>giá trị</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>Nigam</td>
-                                                                        <td>Eichmann</td>
-                                                                        <td>@Sonu</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="mb-3 row">
+                                                    <label for="example-text-input" class="col-md-5 col-form-label">Hiệu
+                                                        điện thế tối đa (V)</label>
+                                                    <div class="col-md-7">
+                                                        <input class="form-control" type="number" value=220
+                                                            id="example-text-input">
                                                     </div>
-                                                    <div class="tab-pane fade" id="dropdown3" role="tabpanel"
-                                                        aria-labelledby="profile-tab">
-                                                        <div class="table-responsive overflow-auto"
-                                                            style="height: 400px" data-bs-spy="scroll">
-                                                            <table class="table">
-                                                                <thead class="bg-primary text-white">
-                                                                    <tr>
-                                                                        <th>Thời gian cập nhật</th>
-                                                                        <th>Biến dữ liệu</th>
-                                                                        <th>giá trị</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody id='share_scope'>
-                                                                    <!-- <tr>
-                                                                        <td>Nigam</td>
-                                                                        <td>Eichmann</td>
-                                                                        <td>@Sonu</td>
-                                                                    </tr> -->
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="mb-3 row">
+                                                    <label for="example-text-input" class="col-md-5 col-form-label">Tiêu
+                                                        thụ trong ngày tối đa (Kwh)</label>
+                                                    <div class="col-md-7">
+                                                        <input class="form-control" type="number" value=50
+                                                            id="example-text-input">
                                                     </div>
-                                                    <div class="tab-pane fade" id="dropdown1" role="tabpanel"
-                                                        aria-labelledby="dropdown1-tab">
-                                                        <div class="table-responsive overflow-auto"
-                                                            style="height: 400px" data-bs-spy="scroll">
-                                                            <table class="table">
-                                                                <thead class="bg-primary text-white">
-                                                                    <tr>
-                                                                        <th>Thời gian cập nhật</th>
-                                                                        <th>Biến dữ liệu</th>
-                                                                        <th>giá trị</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody id="server_scope">
-                                                                    <!-- <tr>
-                                                                        <td>Nigam</td>
-                                                                        <td>Eichmann</td>
-                                                                        <td>@Sonu</td>
-                                                                    </tr> -->
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-10">
+
+                                                </div>
+                                                <!-- <button class="btn btn-danger" type="button">Đặt cảnh báo</button> -->
+                                                <div class="col-2">
+                                                    <button class="btn btn-danger" type="button">Lưu</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="cost" role="tabpanel"
+                                            aria-labelledby="dropdown1-tab">
+                                            <div class="row">
+                                                <div class="mb-3 row">
+                                                    <label for="example-text-input" class="col-md-5 col-form-label">Giờ cao điểm (VND)</label>
+                                                    <div class="col-md-7">
+                                                        <input class="form-control" type="number" value=4937
+                                                            id="example-text-input">
                                                     </div>
-                                                    <div class="tab-pane fade  active show" id="dropdown2"
-                                                        role="tabpanel" aria-labelledby="dropdown2-tab">
-                                                        <div class="table-responsive overflow-auto"
-                                                            style="height: 400px" data-bs-spy="scroll">
-                                                            <table class="table">
-                                                                <thead class="bg-primary text-white">
-                                                                    <tr>
-                                                                        <th>Thời gian cập nhật</th>
-                                                                        <th>Biến dữ liệu</th>
-                                                                        <th>giá trị</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody id="clinet_scope">
-                                                                    <!-- <tr>
-                                                                        <td>Nigam</td>
-                                                                        <td>Eichmann</td>
-                                                                        <td>@1</td>
-                                                                    </tr> -->
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="mb-3 row">
+                                                    <label for="example-text-input" class="col-md-5 col-form-label">Giờ thấp điểm (VND)</label>
+                                                    <div class="col-md-7">
+                                                        <input class="form-control" type="number" value=1746
+                                                            id="example-text-input">
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="mb-3 row">
+                                                    <label for="example-text-input" class="col-md-5 col-form-label">Giờ bình thường (VND)</label>
+                                                    <div class="col-md-7">
+                                                        <input class="form-control" type="number" value=2870
+                                                            id="example-text-input">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-10">
+
+                                                </div>
+                                                <div class="col-2">
+                                                    <button class="btn btn-danger" type="button">Lưu</button>
                                                 </div>
                                             </div>
                                         </div>
