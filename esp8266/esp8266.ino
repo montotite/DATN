@@ -12,6 +12,9 @@
 #include "mqttClinet.h"
 #include "config.h"
 
+const int device = 16; // pin  D0
+int relay1_status = LOW;
+
 SoftwareSerial pzemSWSerial(PZEM_RX_PIN, PZEM_TX_PIN);
 PZEM004Tv30 pzem(pzemSWSerial);
 WiFiUDP ntpUDP;
@@ -33,9 +36,17 @@ void onShareAttribute(String msg)
     }
     else
     {
-        if (doc.containsKey("key1"))
+        if (doc.containsKey("relay1"))
         {
-            bool value = doc["key1"];
+            bool value = doc["relay1"];
+            if (value)
+            {
+                relay1_status = HIGH;
+            }
+            else
+            {
+                relay1_status = LOW;
+            }
         }
     }
 }
@@ -43,8 +54,7 @@ void onShareAttribute(String msg)
 void requestAttribute()
 {
     DynamicJsonDocument doc(1024);
-    // doc["clientKeys"] = "locker1,locker2,locker3,locker4";
-    doc["sharedKeys"] = "locker1,locker2,locker3,locker4";
+    doc["sharedKeys"] = "relay1";
     String msg;
     serializeJson(doc, msg);
     mqtt.requestAttribute(msg);
@@ -82,7 +92,7 @@ void updateTelemetry()
     doc["energy"] = pzem.energy() * 1000;
     doc["frequency"] = pzem.frequency();
     doc["pf"] = pzem.pf();
-    
+
     String msg = "";
     serializeJson(doc, msg);
     mqtt.updateTelemetry(msg);
@@ -119,6 +129,8 @@ void setup()
     mqtt.setCallback(callback);
     mqtt.usageAttribute(frequencyAttribute);
     mqtt.usageTelemetry(frequencyTelemetry);
+    pinMode(device, OUTPUT); // pin device
+    digitalWrite(device, LOW);
 }
 
 void loop()
