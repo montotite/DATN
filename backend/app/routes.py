@@ -8,19 +8,10 @@ from helpers import get_db, Queue, get_channels, channel
 
 # Mock data
 energy_data = [
-    {"ts": 1732801051000, "energy": 100},
-    {"ts": 1732887451000, "energy": 120},
-    {"ts": 1732973851000, "energy": 150},
-    {"ts": 1733060251000, "energy": 180},
-    {"ts": 1733146651000, "energy": 200},
-    {"ts": 1733233051000, "energy": 250},
-    {"ts": 1733319451000, "energy": 300},
-    {"ts": 1733405851000, "energy": 350},
-    {"ts": 1733492251000, "energy": 400},
-    {"ts": 1733578651000, "energy": 450},
-    {"ts": 1733665051000, "energy": 500},
-    {"ts": 1733751451000, "energy": 550},
-    {"ts": 1733837851000, "energy": 600},
+    {"ts": 1735668000000, "energy": 14},
+    {"ts": 1735750800000, "energy": 16},
+    {"ts": 1735837200000, "energy": 15},
+    {"ts": 1735923600000, "energy": 1},
 ]
 
 tags = [
@@ -37,17 +28,15 @@ router = APIRouter()
 
 @router.get(path="/alarm", tags=[tags[6]])
 def get_alarm_list(offset_limit=Depends(get_offset_limit), db=Depends(get_db)):
-
     data = []
-
-    for item in range(0, 10):
+    for item in range(0, 2):
         data.append(
             {
                 "id": "179cd5ad-b30b-407c-a2e0-cb0ee87996a9",
-                "name": f"Cường độ dòng điện vượt ngưỡng {item}",
+                "name": f"Tiêu thụ điện vượt ngưỡng",
                 "created_time": 1734968314675,
                 "type": None,
-                "value": {"value": random.randint(50, 100), "setting": 50},
+                "value": {"value": random.randint(5, 10), "setting": 5},
                 "status": "Đã xem",
                 "additional_info": '{"description": "aaaa",}',
             }
@@ -60,14 +49,25 @@ def get_alarm_list(offset_limit=Depends(get_offset_limit), db=Depends(get_db)):
     }
 
 
+@router.get(path="/dashboard/month", tags=[tags[5]])
+def get_dashboard_month(db=Depends(get_db)):
+    return energy_data
+
+
 @router.get(path="/dashboard/summary", tags=[tags[5]])
 def get_dashboard_summary(db=Depends(get_db)):
     return {
-        "today": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
-        "month": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
-        "year": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
-        "total": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
+        "today": {"cons": 1, "cost": 1746},
+        "month": {"cons": 46, "cost": 80316},
+        "year": {"cons": 46, "cost": 80316},
+        "total": {"cons": 46, "cost": 80316},
     }
+    # return {
+    #     "today": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
+    #     "month": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
+    #     "year": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
+    #     "total": {"cons": random.randint(3, 1000), "cost": random.randint(3, 1000)},
+    # }
 
 
 @router.get(path="/asset", tags=[tags[3]], response_model=AssetList)

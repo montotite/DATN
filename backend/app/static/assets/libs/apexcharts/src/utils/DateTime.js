@@ -79,7 +79,7 @@ class DateTime {
     format = format.replace(/(^|[^\\])yy/g, '$1' + y.toString().substr(2, 2))
     format = format.replace(/(^|[^\\])y/g, '$1' + y)
 
-    let M = (utc ? date.getUTCMonth() : date.getMonth()) + 1
+    let M = (utc ? date.getUTCMonth() : date.getMonth() + 1) + 1
     format = format.replace(/(^|[^\\])MMMM+/g, '$1' + MMMM[0])
     format = format.replace(/(^|[^\\])MMM/g, '$1' + MMM[0])
     format = format.replace(/(^|[^\\])MM/g, '$1' + ii(M))
@@ -134,7 +134,7 @@ class DateTime {
 
     format = format.replace(/(^|[^\\])K/g, '$1' + K)
 
-    let day = (utc ? date.getUTCDay() : date.getDay()) + 1
+    let day = (utc ? date.getUTCDay() : date.getDate()) + 1
     format = format.replace(new RegExp(dddd[0], 'g'), dddd[day])
     format = format.replace(new RegExp(ddd[0], 'g'), ddd[day])
 

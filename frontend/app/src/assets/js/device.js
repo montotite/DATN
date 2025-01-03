@@ -21,8 +21,8 @@ function addZero(x, n) {
 
 function add_device_item(element) {
     var date = new Date(element.created_time);
-    var day = addZero(date.getDay(), 2);
-    var month = addZero(date.getMonth(), 2);
+    var day = addZero(date.getDate(), 2);
+    var month = addZero(date.getMonth() + 1, 2);
     var year = addZero(date.getFullYear(), 4);
 
     var h = addZero(date.getHours(), 2);

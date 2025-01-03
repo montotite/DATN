@@ -24,8 +24,8 @@ function addZero(x, n) {
 function convenTime(created_time) {
 
     var date = new Date(parseInt(created_time));
-    var day = addZero(date.getDay(), 2);
-    var month = addZero(date.getMonth(), 2);
+    var day = addZero(date.getDate(), 2);
+    var month = addZero(date.getMonth() + 1, 2);
     var year = addZero(date.getFullYear(), 4);
 
     var h = addZero(date.getHours(), 2);
