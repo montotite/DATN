@@ -52,7 +52,7 @@ function add_alarm_item(element) {
                         </td>
                         <td>
                             <h5 class="mb-0 fs-4">
-                            ${element.value.value}Kwh <span class="text-muted">/${element.value.setting}</span>
+                            ${element.value.value}<span class="text-muted">/${element.value.setting} Kwh</span>
                             </h5>
                         </td>
                         <td>

@@ -28,19 +28,47 @@ router = APIRouter()
 
 @router.get(path="/alarm", tags=[tags[6]])
 def get_alarm_list(offset_limit=Depends(get_offset_limit), db=Depends(get_db)):
-    data = []
-    for item in range(0, 2):
-        data.append(
-            {
-                "id": "179cd5ad-b30b-407c-a2e0-cb0ee87996a9",
-                "name": f"Tiêu thụ điện vượt ngưỡng",
-                "created_time": 1734968314675,
-                "type": None,
-                "value": {"value": random.randint(5, 10), "setting": 5},
-                "status": "Đã xem",
-                "additional_info": '{"description": "aaaa",}',
-            }
-        )
+    data = [
+        {
+            "id": "179cd5ad-b30b-407c-a2e0-cb0ee87996a9",
+            "name": f"Tiêu thụ điện vượt ngưỡng",
+            "created_time": 1735731422000,
+            "type": None,
+            "value": {"value": 14, "setting": 5},
+            "status": "Đã xem",
+            "additional_info": '{"description": "aaaa",}',
+        },
+        {
+            "id": "179cd5ad-b30b-407c-a2e0-cb0ee87996a9",
+            "name": f"Tiêu thụ điện vượt ngưỡng",
+            "created_time": 1735821422000,
+            "type": None,
+            "value": {"value": 16, "setting": 5},
+            "status": "Đã xem",
+            "additional_info": '{"description": "aaaa",}',
+        },
+        {
+            "id": "179cd5ad-b30b-407c-a2e0-cb0ee87996a9",
+            "name": f"Tiêu thụ điện vượt ngưỡng",
+            "created_time": 1735907822000,
+            "type": None,
+            "value": {"value": 15, "setting": 5},
+            "status": "Đã xem",
+            "additional_info": '{"description": "aaaa",}',
+        },
+    ]
+    # for item in range(0, 2):
+    #     data.append(
+    #         {
+    #             "id": "179cd5ad-b30b-407c-a2e0-cb0ee87996a9",
+    #             "name": f"Tiêu thụ điện vượt ngưỡng",
+    #             "created_time": 1734968314675,
+    #             "type": None,
+    #             "value": {"value": random.randint(5, 10), "setting": 5},
+    #             "status": "Đã xem",
+    #             "additional_info": '{"description": "aaaa",}',
+    #         }
+    #     )
     return {
         "total_pages": 1,
         "total_elements": 1,
