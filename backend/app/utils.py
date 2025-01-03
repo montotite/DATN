@@ -371,6 +371,30 @@ class Crud:
             self.db.rollback()
             return False
 
+    def get_timeseries_value(self, id: str, keys: list = None):
+        data = self.db.query(Telemetry)
+        data = data.filter(
+            Telemetry.entity_id == str(id),
+            # Attribute.attribute_key.in_(tuple(keys)),
+            #    or_(Attribute.attribute_type == str(item)
+            #    for item in keys)
+        )
+
+        if keys != None:
+            data = data.filter(
+                Telemetry.attribute_key.in_(tuple(keys)),
+            )
+        data = data.all()
+        data = [
+            {
+                "key": item.key,
+                "value": item.value,
+                "ts": item.ts,
+            }
+            for item in data
+        ]
+        return data
+
     def get_atribute_value(self, id: str, scope: str = None, keys: list = None):
         data = self.db.query(Attribute)
         data = data.filter(

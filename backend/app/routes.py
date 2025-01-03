@@ -306,6 +306,21 @@ def get_attribute_values(
     return rs
 
 
+# @router.get(path="/plugins/telemetry/value/timeseries", tags=[tags[2]])
+# def get_timeseries_values(id: UUID, keys: str = None, db=Depends(get_db)):
+#     if keys != None:
+#         keys = keys.split(",")
+#     data = Crud(db).get_timeseries_value(str(id), keys)
+#     # rs = {}
+#     # for item in data:
+#     #     if rs.get(item["attribute_type"]) == None:
+#     #         rs[item["attribute_type"]] = []
+#     #     rs[item["attribute_type"]].append(
+#     #         {item["attribute_key"]: {"value": item["value"], "ts": item["ts"]}}
+#     #     )
+#     return data
+
+
 @router.post(path="/plugins/telemetry", tags=[tags[2]])
 def save_atribute(
     id: UUID,

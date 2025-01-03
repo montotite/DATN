@@ -65,6 +65,7 @@ const entity_id = document.getElementById("entity_id")
 const clinet_scope = document.getElementById("clinet_scope")
 const share_scope = document.getElementById("share_scope")
 const server_scope = document.getElementById("server_scope")
+const telemetry = document.getElementById("telemetry")
 
 
 btn_delete.addEventListener("click", event_delete)
@@ -90,6 +91,7 @@ async function load_telemetry() {
             <td>${Object.keys(element)[0]}</td>
             <td>${element[Object.keys(element)[0]].value}</td>
             `
+            // telemetry.appendChild(item)
             clinet_scope.appendChild(item)
         });
     }
