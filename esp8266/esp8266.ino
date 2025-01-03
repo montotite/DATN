@@ -22,6 +22,11 @@ WiFiClient wifiClient;
 MqttClient mqtt(wifiClient);
 NTPClient timeClient(ntpUDP);
 
+void relay_controll()
+{
+    digitalWrite(device, relay1_status);
+}
+
 void onShareAttribute(String msg)
 {
     Serial.println(msg);
@@ -130,7 +135,6 @@ void setup()
     mqtt.usageAttribute(frequencyAttribute);
     mqtt.usageTelemetry(frequencyTelemetry);
     pinMode(device, OUTPUT); // pin device
-    digitalWrite(device, LOW);
 }
 
 void loop()
@@ -140,4 +144,5 @@ void loop()
     mqtt.run(now);
     updateAttribute();
     updateTelemetry();
+    relay_controll();
 }
